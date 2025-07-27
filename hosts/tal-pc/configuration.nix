@@ -1,20 +1,19 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../../modules/system/base/default.nix
-      ../../modules/system/base/nvidia.nix
-      ../../modules/system/users/tal.nix
-      ../../modules/system/bundles/general-desktop.nix
-      ../../modules/system/desktops/plasma.nix
-      ../../modules/system/bundles/gaming.nix
-      ../../modules/system/bundles/motu.nix
-      ../../modules/system/bundles/qmk.nix
-      ../../modules/system/base/sops.nix
-      ../../modules/system/services/odrive.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/system/base/default.nix
+    ../../modules/system/base/nvidia.nix
+    ../../modules/system/users/tal.nix
+    ../../modules/system/bundles/general-desktop.nix
+    ../../modules/system/desktops/plasma.nix
+    ../../modules/system/bundles/gaming.nix
+    ../../modules/system/bundles/motu.nix
+    ../../modules/system/bundles/qmk.nix
+    ../../modules/system/base/sops.nix
+    ../../modules/system/services/odrive.nix
+];
 
   networking.hostName = "tal-pc";
 

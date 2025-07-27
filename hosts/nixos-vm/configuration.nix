@@ -9,8 +9,8 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/base/default.nix
+    ../../modules/system/users/tal.nix
     ../../modules/system/bundles/general-desktop.nix
-    ../../modules/system/base/users.nix
   ];
 
   networking.hostName = "nixos-vm";

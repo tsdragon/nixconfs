@@ -12,7 +12,7 @@ The `hosts/` directory contains configurations specific to individual machines:
 
 Each host directory includes:
 - `configuration.nix`: Main system configuration.
-- `hardware-configuration.nix`: Hardware-specific settings. Automatically generated on install.
+- `hardware-configuration.nix`: Hardware-specific settings. Typically automatically generated on install.
 - `home.nix`: User-specific Home Manager configuration.
 
 ### Modules

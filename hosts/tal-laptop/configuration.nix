@@ -1,15 +1,14 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../../modules/system/base/default.nix
-      ../../modules/system/base/users.nix
-      ../../modules/system/bundles/general-desktop.nix
-      ../../modules/system/desktops/gnome.nix
-      ../../modules/system/bundles/gaming.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/system/base/default.nix
+    ../../modules/system/users/tal.nix
+    ../../modules/system/bundles/general-desktop.nix
+    ../../modules/system/desktops/gnome.nix
+    ../../modules/system/bundles/gaming.nix
+  ];
 
   networking.hostName = "tal-laptop";
 
