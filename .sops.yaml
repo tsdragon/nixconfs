@@ -1,0 +1,11 @@
+keys:
+  - &users:
+    - &tal age1pgtk943p9j5cxztrfs83w6dvwrwstdsnpwtaezq5v8hx30jknszswqu3er
+  - &hosts
+    - &talpc age1rca8e59rj7h2tn5g5d38nh2wt0nungh3delw4h75p6daz6mamdqsuh6gj7
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+      - age:
+        - *tal
+        - *talpc

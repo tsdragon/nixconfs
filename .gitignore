@@ -1,0 +1,22 @@
+# Ignore editor backups and system files
+*~
+.*.swp
+.DS_Store
+
+# Ignore nix build artifacts
+/result
+/result-*
+/nix-result
+*.o
+*.a
+*.so
+*.pyc
+
+# Ignore logs
+*.log
+
+# Ignore private SSH keys
+*.key
+
+# Ignore files created by nix-shell
+shell.nix
