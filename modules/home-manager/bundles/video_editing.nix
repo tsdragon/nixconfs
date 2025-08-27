@@ -6,6 +6,6 @@
     handbrake
     ffmpeg
     mkvtoolnix
-    kdenlive
+    kdePackages.kdenlive
   ];
 }
