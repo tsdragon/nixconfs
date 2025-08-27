@@ -24,6 +24,7 @@
     wget
     tree
     nil
+    less
     tldr
     exfatprogs
     sops
