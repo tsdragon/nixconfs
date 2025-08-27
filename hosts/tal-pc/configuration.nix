@@ -13,7 +13,7 @@
     ../../modules/system/bundles/qmk.nix
     ../../modules/system/base/sops.nix
     ../../modules/system/services/odrive.nix
-];
+  ];
 
   networking.hostName = "tal-pc";
 
@@ -29,6 +29,8 @@
   };
 
   services.pcscd.enable = true;
+
+  nixpkgs.overlays = [ (import ../../overlays/av1-overlay.nix) ];
 
   environment.systemPackages = with pkgs; [
     cifs-utils
