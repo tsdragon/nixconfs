@@ -13,6 +13,7 @@
     ../../modules/system/bundles/qmk.nix
     ../../modules/system/base/sops.nix
     ../../modules/system/services/odrive.nix
+    ../../modules/system/services/ai.nix
   ];
 
   networking.hostName = "tal-pc";
@@ -46,4 +47,5 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
+}
 }
