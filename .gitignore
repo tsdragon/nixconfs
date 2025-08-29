@@ -11,6 +11,7 @@
 *.a
 *.so
 *.pyc
+.webui_secret_key
 
 # Ignore logs
 *.log
