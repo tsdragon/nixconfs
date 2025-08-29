@@ -7,6 +7,8 @@
 
     nix-alien.url = "github:thiagokokada/nix-alien";
 
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+
     home-manager = {
       url = "github:nix-community/home-manager?ref=release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,6 +29,7 @@
     self,
     nixpkgs,
     nix-alien,
+    vscode-server,
     home-manager,
     firefox-addons,
     sops-nix,
@@ -65,6 +68,7 @@
       nixos-vm = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
+          inputs.vscode-server.nixosModules.default
           ./hosts/nixos-vm/configuration.nix
         ];
       };
@@ -73,6 +77,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs outputs; };
         modules = [
+          inputs.vscode-server.nixosModules.default
           ./hosts/tal-pc/configuration.nix
         ];
       };
@@ -81,6 +86,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs outputs; };
         modules = [
+          inputs.vscode-server.nixosModules.default
           ./hosts/tal-laptop/configuration.nix
         ];
       };

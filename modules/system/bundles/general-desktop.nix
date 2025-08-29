@@ -1,17 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [
-    # VS Code
-    (fetchTarball {
-      url = "https://github.com/nix-community/nixos-vscode-server/tarball/8b6db451de46ecf9b4ab3d01ef76e59957ff549f";
-      sha256 = "09j4kvsxw1d5dvnhbsgih0icbrxqv90nzf0b589rb5z6gnzwjnqf";
-    })
-  ];
-
   hardware.bluetooth.enable = true;
 
-  # Enable VS Code and Server
   services.vscode-server.enable = true;
 
   environment.systemPackages = with pkgs; [
