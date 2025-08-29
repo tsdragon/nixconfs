@@ -15,7 +15,7 @@
   services.vscode-server.enable = true;
 
   environment.systemPackages = with pkgs; [
-    vscode
+    #vscode
     kitty
     home-manager
     #bluez

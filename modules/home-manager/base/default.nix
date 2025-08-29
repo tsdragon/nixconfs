@@ -9,6 +9,13 @@
     spotify
   ];
 
+  programs.vscode = {
+    enable = true;
+    profiles.default.userSettings = {
+      "update.mode" = "none";
+    };
+  };
+
   xdg = {
       enable = true;
       mime.enable = true;
