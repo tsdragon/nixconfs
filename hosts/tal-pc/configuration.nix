@@ -18,7 +18,46 @@
 
   networking.hostName = "tal-pc";
 
-  # Bootloader
+  networking.networkmanager.ensureProfiles.profiles = {
+    br0 = {
+      connection = {
+        id = "br0";
+        type = "bridge";
+        interface-name = "br0";
+        autoconnect = true;
+      };
+      ipv4.method = "auto";
+      ipv6.method = "auto";
+      bridge.stp = "false";
+    };
+
+    "eno1->br0" = {
+      connection = {
+        id = "eno1->br0";
+        type = "ethernet";
+        interface-name = "eno1";
+        master = "br0";
+        port-type = "bridge";
+        autoconnect = true;
+      };
+      ipv4.method = "disabled";
+      ipv6.method = "disabled";
+    };
+
+    "eno2->br0" = {
+      connection = {
+        id = "eno2->br0";
+        type = "ethernet";
+        interface-name = "eno2";
+        master = "br0";
+        port-type = "bridge";
+        autoconnect = true;
+      };
+      ipv4.method = "disabled";
+      ipv6.method = "disabled";
+    };
+  };
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
