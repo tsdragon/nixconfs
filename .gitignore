@@ -21,6 +21,3 @@
 
 # Ignore files created by nix-shell
 shell.nix
-
-# Ignore sensitive configuration files
-secrets/location.nix
