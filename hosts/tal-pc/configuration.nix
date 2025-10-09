@@ -77,6 +77,13 @@
     androidenv.androidPkgs.platform-tools
     yubioath-flutter
     aria2
+    qpwgraph
+    helvum
+    carla
+    easyeffects
+    lsp-plugins
+    x42-plugins
+    zam-plugins
   ];
   
   # This value determines the NixOS release from which the default

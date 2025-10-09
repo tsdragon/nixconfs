@@ -31,6 +31,7 @@
     gimp3-with-plugins
     onlyoffice-desktopeditors
     obsidian
+    roomeqwizard
   ];
 
   # Nicely reload system units when changing configs

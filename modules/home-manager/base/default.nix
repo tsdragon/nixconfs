@@ -7,6 +7,7 @@
     shared-mime-info
     vlc
     spotify
+    tidal-hifi
   ];
 
   programs.vscode = {
