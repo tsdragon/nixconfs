@@ -9,7 +9,7 @@
     ../../modules/system/bundles/general-desktop.nix
     ../../modules/system/desktops/plasma.nix
     ../../modules/system/bundles/gaming.nix
-    ../../modules/system/bundles/motu.nix
+    ../../modules/system/bundles/desktop-audio.nix
     ../../modules/system/bundles/qmk.nix
     ../../modules/system/base/sops.nix
     ../../modules/system/services/odrive.nix
