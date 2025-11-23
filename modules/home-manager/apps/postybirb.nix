@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 
 let
-  version = "3.1.61";
-  appimageSha256  = "sha256-2s82BqIbvy5Ug3vGqzFIUCDpIpA6aDRHpBifo0zwW70=";
+  version = "3.1.65";
+  appimageSha256  = "sha256-AQM04BEdAphACzJ+JR5UE5DQiXTmnKunSorNd5tLjsA=";
 
   postybirbAppImage = pkgs.fetchurl {
     url    = "https://github.com/mvdicarlo/postybirb-plus/releases/download/v${version}/postybirb-plus-${version}-x86_64.AppImage";
