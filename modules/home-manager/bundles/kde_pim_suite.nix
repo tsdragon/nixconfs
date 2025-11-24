@@ -1,4 +1,4 @@
-# modules/home-manager/bundles/kde_pim_suite.nix
+# Deprecated/Unused
 { config, pkgs, lib, ... }:
 
 {

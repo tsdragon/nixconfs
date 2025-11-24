@@ -1,3 +1,4 @@
+# Deprecated/Unused
 { config, lib, pkgs, ... }: {
   options.myNixOS.services.cockpit = {
     enable = lib.mkEnableOption "Enable Cockpit web console";

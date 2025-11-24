@@ -1,4 +1,4 @@
-# modules/home-manager/apps/thunderbird.nix
+# Deprecated/Unused
 { config, pkgs, lib, inputs, ... }:
 
 {

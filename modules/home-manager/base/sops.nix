@@ -1,5 +1,6 @@
 # This module is used to manage secrets with sops at the home level.
 # System level config is at modules/system/base/sops.nix
+# Currently Unused
 { config, pkgs, lib, inputs, ... }:
 
 {
