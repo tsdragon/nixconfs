@@ -12,6 +12,7 @@
     oxygen
     elisa
     khelpcenter
+    discover
   ];
 
   environment.systemPackages = with pkgs; [
