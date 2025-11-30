@@ -29,7 +29,7 @@
 
   home.packages = with pkgs; [
     parsec-bin
-    gimp3-with-plugins
+    gimp-with-plugins
     onlyoffice-desktopeditors
     obsidian
     roomeqwizard

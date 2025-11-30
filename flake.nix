@@ -2,7 +2,7 @@
   description = "Tal's NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05"; # Use the desired NixOS version
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11"; # Use the desired NixOS version
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
@@ -10,7 +10,7 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     home-manager = {
-      url = "github:nix-community/home-manager?ref=release-25.05";
+      url = "github:nix-community/home-manager?ref=release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

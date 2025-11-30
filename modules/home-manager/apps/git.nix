@@ -3,15 +3,13 @@
 {
   programs.git = {
     enable = true;
-    userName = config.identity.name;
-    userEmail = config.identity.git_email;
-    extraConfig = {
-    # This ensures that "git pull" uses merges (the default behavior)
+    settings = {
+      user = {
+        name = config.identity.name;
+        email = config.identity.git_email;
+      };
+      # Keep default merge workflow for `git pull
       pull.rebase = false;
-
-    # Optional: Git’s behavior regarding fast-forward merges can also be set:
-    # "pull.ff" = "true";  # Fast-forward if possible, otherwise merge
-    # "pull.ff" = "false"; # Always create a merge commit, even if fast-forward is possible
     };
   };
 }

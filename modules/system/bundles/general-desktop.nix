@@ -39,7 +39,7 @@
 
   fonts.packages = with pkgs; [
     corefonts
-    ubuntu_font_family
+    ubuntu-classic
   ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues nerd-fonts);
 
   fonts.enableDefaultPackages = true;
