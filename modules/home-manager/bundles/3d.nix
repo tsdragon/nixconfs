@@ -1,5 +1,10 @@
 { config, pkgs, lib, ... }:
 
+let
+  lycheeWrapper = pkgs.writeShellScriptBin "lychee" ''
+    exec LycheeSlicer "$@"
+  '';
+in
 {
   imports = [
     ../apps/orca-slicer.nix
@@ -9,5 +14,7 @@
     blender
     openscad
     unityhub
+    LycheeSlicer
+    lycheeWrapper
   ];
 }
