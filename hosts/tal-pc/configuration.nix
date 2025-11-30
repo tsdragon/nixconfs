@@ -68,7 +68,24 @@
     adb.enable = true;
   };
 
-  services.pcscd.enable = true;
+  services = {
+    pcscd.enable = true;
+    flatpak = {
+      enable = true;
+      remotes = [
+        {
+          name = "flathub";
+          location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+        }
+      ];
+      packages = [
+        {
+          appId = "com.parsecgaming.parsec";
+          origin = "flathub";
+        }
+      ];
+    };
+  };
 
   nixpkgs.overlays = [ (import ../../overlays/av1-overlay.nix) ];
 

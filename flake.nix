@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,6 +35,7 @@
     nixpkgs,
     nix-alien,
     vscode-server,
+    nix-flatpak,
     home-manager,
     firefox-addons,
     sops-nix,
@@ -78,6 +84,7 @@
         specialArgs = { inherit inputs outputs; };
         modules = [
           inputs.vscode-server.nixosModules.default
+          inputs.nix-flatpak.nixosModules.nix-flatpak
           ./hosts/tal-pc/configuration.nix
         ];
       };
