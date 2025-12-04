@@ -1,5 +1,11 @@
 { config, pkgs, lib, ... }:
 
+let
+  spellcheckDicts = with pkgs.hunspellDicts; [
+    en_CA
+    en_US
+  ];
+in
 {
   services = {
     displayManager.sddm.enable = true;
@@ -22,9 +28,13 @@
     kdePackages.akonadiconsole
     kdePackages.akonadi-search
     kdePackages.qtstyleplugin-kvantum
-  ];
+    hunspell
+  ] ++ spellcheckDicts;
 
   qt.style = "kvantum";
+
+  environment.sessionVariables.DICPATH =
+    lib.makeSearchPath "share/hunspell" spellcheckDicts;
 
   programs.partition-manager.enable = true;
 }
