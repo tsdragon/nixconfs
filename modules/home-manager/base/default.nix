@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  targets.genericLinux.enable = true;
-  
   home.packages = with pkgs; [
     shared-mime-info
     vlc
