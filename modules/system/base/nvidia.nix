@@ -1,16 +1,20 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Enable OpenGL
   hardware.graphics = {
     enable = true;
+    # VA-API shim for NVDEC/NVENC so browsers/media players can use the NVIDIA GPU.
+    extraPackages = with pkgs; [ nvidia-vaapi-driver ];
   };
 
-  # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
 
-  hardware.nvidia = {
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    NVD_BACKEND = "direct";
+  };
 
+  hardware.nvidia = {
     # Modesetting is required.
     modesetting.enable = true;
 
@@ -30,14 +34,11 @@
     # supported GPUs is at: 
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
-    # Currently alpha-quality/buggy, so false is currently the recommended setting.
     open = true;
 
-    # Enable the Nvidia settings menu,
-	  # accessible via `nvidia-settings`.
     nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    
+    # Prefer the long-lived branch for fewer regressions.
+    package = config.boot.kernelPackages.nvidiaPackages.production;
   };
 }

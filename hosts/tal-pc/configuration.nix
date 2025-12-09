@@ -62,6 +62,14 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+
+  # Prevent the iGPU (amdgpu) from binding DRM so only the NVIDIA dGPU drives displays.
+  boot.blacklistedKernelModules = [ "amdgpu" ];
+
+  hardware = {
+    enableRedistributableFirmware = true;
+    cpu.amd.updateMicrocode = true;
+  };
   
   programs = {
     winbox.enable = true;
@@ -70,6 +78,9 @@
 
   services = {
     pcscd.enable = true;
+    hardware.bolt.enable = true;
+    fwupd.enable = true;
+    fstrim.enable = true;
     flatpak = {
       enable = true;
       remotes = [
