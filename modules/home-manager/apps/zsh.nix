@@ -68,7 +68,7 @@
         _comp_options+=(globdots)
       '';
 
-      initExtra = ''
+      initContent = ''
         setopt INC_APPEND_HISTORY
         setopt HIST_FIND_NO_DUPS
 
