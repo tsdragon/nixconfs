@@ -9,11 +9,6 @@
 
   services.xserver.videoDrivers = ["nvidia"];
 
-  environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "nvidia";
-    NVD_BACKEND = "direct";
-  };
-
   hardware.nvidia = {
     # Modesetting is required.
     modesetting.enable = true;
