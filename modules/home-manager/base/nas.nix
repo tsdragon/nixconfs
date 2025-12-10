@@ -4,6 +4,12 @@
 {
   home.packages = [ pkgs.cifs-utils ];
 
+  # Remove stale user unit symlinks for legacy NAS mounts (system mounts handle these).
+  systemd.user.tmpfiles.rules = [
+    "r /home/tal/.config/systemd/user/nas-main.mount"
+    "r /home/tal/.config/systemd/user/nas-main.automount"
+  ];
+  
   systemd.user.mounts.home-tal-nas-main = {
     Unit = {
       Description = "Mount main fileshare from NAS";
