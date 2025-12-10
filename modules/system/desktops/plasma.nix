@@ -29,6 +29,7 @@ in
     kdePackages.akonadi-search
     kdePackages.qtstyleplugin-kvantum
     hunspell
+    qt6.qtwayland
   ] ++ spellcheckDicts;
 
   qt.style = "kvantum";
