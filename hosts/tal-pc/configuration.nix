@@ -85,6 +85,7 @@
       enable = true;
       uninstallUnmanaged = true;
       update.auto.enable = true;
+      update.onActivation = true;
       packages = [
         "com.parsecgaming.parsec"
       ];
