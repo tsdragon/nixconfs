@@ -83,17 +83,10 @@
     fstrim.enable = true;
     flatpak = {
       enable = true;
-      remotes = [
-        {
-          name = "flathub";
-          location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-        }
-      ];
+      uninstallUnmanaged = true;
+      update.auto.enable = true;
       packages = [
-        {
-          appId = "com.parsecgaming.parsec";
-          origin = "flathub";
-        }
+        "com.parsecgaming.parsec"
       ];
     };
   };
