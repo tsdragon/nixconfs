@@ -1,4 +1,4 @@
-# Deprecated/Unused
+# Deprecated/Unused. Cockpit is not enabled on any host.
 { config, lib, pkgs, ... }: {
   options.myNixOS.services.cockpit = {
     enable = lib.mkEnableOption "Enable Cockpit web console";

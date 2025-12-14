@@ -1,5 +1,5 @@
-# 20251130 - Wrap Orca Slicer with nix-alien to fix missing library issues. without it
-# the prep viewer will be blank.
+# 20251130 - Wrap Orca Slicer with nix-alien to fix missing library issues.
+# without it the prep viewer will be blank.
 { pkgs, inputs, config, lib, ... }:
 let
   system = pkgs.stdenv.system;

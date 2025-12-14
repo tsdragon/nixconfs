@@ -1,4 +1,4 @@
-# Deprecated/Unused
+# Deprecated/Unused. Impermanence is not enabled on any host.
 {
   pkgs,
   lib,
