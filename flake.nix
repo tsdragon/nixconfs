@@ -4,10 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11"; # Use the desired NixOS version
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
+    
     nix-alien.url = "github:thiagokokada/nix-alien";
-
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     home-manager = {
       url = "github:nix-community/home-manager?ref=release-25.11";
@@ -17,10 +17,6 @@
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-flatpak = {
-      url = "github:gmodena/nix-flatpak";
     };
 
     sops-nix = {
