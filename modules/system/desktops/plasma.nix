@@ -12,6 +12,16 @@ in
     desktopManager.plasma6.enable = true;
   };
 
+  xdg.portal = {
+    enable = true;
+    # Force the KDE portal and keep GTK around for fallback-only cases.
+    extraPortals = [
+      pkgs.kdePackages.xdg-desktop-portal-kde
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    configPackages = [ pkgs.kdePackages.plasma-workspace ];
+  };
+
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     kate
     konsole
