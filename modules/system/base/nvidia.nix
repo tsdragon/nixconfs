@@ -4,7 +4,12 @@
   hardware.graphics = {
     enable = true;
     # VA-API shim for NVDEC/NVENC so browsers/media players can use the NVIDIA GPU.
-    extraPackages = with pkgs; [ nvidia-vaapi-driver ];
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+      egl-wayland
+    ];
+    # Wayland EGL platform for 32-bit clients (e.g., Steam runtime) so they can talk to the driver.
+    extraPackages32 = with pkgs.pkgsi686Linux; [ egl-wayland ];
   };
 
   services.xserver.videoDrivers = ["nvidia"];
@@ -23,13 +28,12 @@
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
     powerManagement.finegrained = false;
 
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
+    # Use proprietary kernel module (open module can flake with KWin atomic modesets).
+    # Support fir open driver (if you choose touse it) is limited to the Turing and later architectures. Full list of 
     # supported GPUs is at: 
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
-    open = true;
+    open = false;
 
     nvidiaSettings = true;
     
