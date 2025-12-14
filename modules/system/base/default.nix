@@ -29,6 +29,8 @@
     exfatprogs
     sops
     nfs-utils
+    p7zip
+    unrar
   ];
 
   programs = {
