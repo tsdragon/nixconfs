@@ -58,13 +58,49 @@
     };
   };
 
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-  };
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5; # prune old entries to keep the EFI partition small
+      };
+      efi.canTouchEfiVariables = true;
+    };
 
-  # Prevent the iGPU (amdgpu) from binding DRM so only the NVIDIA dGPU drives displays.
-  boot.blacklistedKernelModules = [ "amdgpu" ];
+    # Prevent the iGPU (amdgpu) from binding DRM so only the NVIDIA dGPU drives displays.
+    blacklistedKernelModules = [ "amdgpu" ];
+
+    initrd = {
+      kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
+    };
+
+    plymouth = {
+      enable = true;
+      theme = "dna";
+      themePackages = with pkgs; [
+        # By default we would install all themes
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "dna" ];
+        })
+      ];
+    };
+
+    # Enable "Silent boot"
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+      "video=DP-0:5120x1440@60e"
+    ];
+    # Hide the OS choice for bootloaders.
+    # It's still possible to open the bootloader list by pressing any key
+    # It will just not appear on screen unless a key is pressed
+    loader.timeout = 0;
+  };
 
   hardware = {
     enableRedistributableFirmware = true;
