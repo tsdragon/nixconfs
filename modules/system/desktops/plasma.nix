@@ -35,7 +35,6 @@ in
     kde-gruvbox
     whitesur-kde
     kdePackages.qtstyleplugin-kvantum
-    kdePackages.kdeconnect-kde
     hunspell
     qt6.qtwayland
   ] ++ spellcheckDicts;
@@ -45,5 +44,8 @@ in
   environment.sessionVariables.DICPATH =
     lib.makeSearchPath "share/hunspell" spellcheckDicts;
 
-  programs.partition-manager.enable = true;
+  programs = {
+    partition-manager.enable = true;
+    kdeconnect.enable = true;
+  };
 }
