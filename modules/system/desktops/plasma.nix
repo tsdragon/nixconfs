@@ -34,10 +34,8 @@ in
   environment.systemPackages = with pkgs; [
     kde-gruvbox
     whitesur-kde
-    kdePackages.akonadi
-    kdePackages.akonadiconsole
-    kdePackages.akonadi-search
     kdePackages.qtstyleplugin-kvantum
+    kdePackages.kdeconnect-kde
     hunspell
     qt6.qtwayland
   ] ++ spellcheckDicts;
