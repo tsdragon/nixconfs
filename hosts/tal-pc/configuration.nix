@@ -18,6 +18,13 @@
 
   networking.hostName = "tal-pc";
 
+  networking.firewall = {
+    enable = true;
+    allowedUDPPorts = [ 49983 ];
+    # Optional (usually not needed for realtime streaming):
+    # allowedTCPPorts = [ 49987 ];
+  };
+
   networking.networkmanager.ensureProfiles.profiles = {
     br0 = {
       connection = {

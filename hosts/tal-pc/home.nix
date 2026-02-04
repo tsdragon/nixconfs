@@ -5,6 +5,7 @@
     ../../modules/home-manager/base/default.nix
     ../../modules/home-manager/base/identity.nix
     ../../modules/home-manager/bundles/3d.nix
+    ../../modules/home-manager/bundles/android_dev.nix
     ../../modules/home-manager/bundles/messaging.nix
     ../../modules/home-manager/bundles/photos.nix
     ../../modules/home-manager/bundles/ripping.nix
@@ -15,6 +16,8 @@
     ../../modules/home-manager/apps/kitty.nix
     ../../modules/home-manager/apps/postybirb.nix
     ../../modules/home-manager/apps/git.nix
+    ../../modules/home-manager/bundles/streaming.nix
+    #../../modules/home-manager/apps/vnyan.nix   
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -26,6 +29,7 @@
 
   programs = {
     home-manager.enable = true;
+    #vnyan.enable = true;
   };
 
   home.packages = with pkgs; [

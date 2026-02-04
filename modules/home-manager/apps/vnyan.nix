@@ -3,11 +3,29 @@
 let
   cfg = config.programs.vnyan;
 
+  envExports = lib.concatStringsSep "\n"
+    (lib.mapAttrsToList (name: value: "export ${name}=\"${value}\"") cfg.environment);
+
   vnyanWrapper = pkgs.writeShellScriptBin "vnyan" ''
     set -euo pipefail
     export WINEPREFIX="${cfg.prefix}"
     export WINEARCH=win64
-    exec ${cfg.winePackage}/bin/wine "${cfg.exePath}" "$@"
+    ${envExports}
+    exe_path="${cfg.exePath}"
+    if [ "${lib.boolToString cfg.autoDetectExe}" = "true" ] && [ ! -f "$exe_path" ]; then
+      for candidate in \
+        "$WINEPREFIX/drive_c/Program Files/VNyan/VNyan.exe" \
+        "$WINEPREFIX/drive_c/Program Files (x86)/VNyan/VNyan.exe" \
+        "$WINEPREFIX/drive_c/Program Files/Vnyan/Vnyan.exe" \
+        "$WINEPREFIX/drive_c/Program Files (x86)/Vnyan/Vnyan.exe"
+      do
+        if [ -f "$candidate" ]; then
+          exe_path="$candidate"
+          break
+        fi
+      done
+    fi
+    exec ${cfg.winePackage}/bin/wine "$exe_path" "$@"
   '';
 
   vnyanInstall = pkgs.writeShellScriptBin "vnyan-install" ''
@@ -18,6 +36,7 @@ let
     fi
     export WINEPREFIX="${cfg.prefix}"
     export WINEARCH=win64
+    ${envExports}
     mkdir -p "$WINEPREFIX"
     exec ${cfg.winePackage}/bin/wine "$1"
   '';
@@ -26,6 +45,7 @@ let
     set -euo pipefail
     export WINEPREFIX="${cfg.prefix}"
     export WINEARCH=win64
+    ${envExports}
     mkdir -p "$WINEPREFIX"
     ${cfg.winePackage}/bin/wineboot -u
     ${cfg.winetricksPackage}/bin/winetricks -q ${lib.escapeShellArgs cfg.winetricksPackages}
@@ -65,8 +85,22 @@ in
 
     exePath = lib.mkOption {
       type = lib.types.str;
-      default = "${config.xdg.dataHome}/vnyan/prefix/drive_c/Program Files/Vnyan/Vnyan.exe";
+      default = "${config.xdg.dataHome}/vnyan/prefix/drive_c/Program Files/VNyan/VNyan.exe";
       description = "Path to Vnyan.exe inside the prefix.";
+    };
+
+    autoDetectExe = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to fall back to common install paths if exePath is missing.";
+    };
+
+    environment = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {
+        WINE_DISABLE_RAWINPUT = "1";
+      };
+      description = "Environment variables exported when running Vnyan.";
     };
 
     winetricksPackages = lib.mkOption {
