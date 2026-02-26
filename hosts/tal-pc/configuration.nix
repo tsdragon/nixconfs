@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -69,7 +69,7 @@
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 5; # prune old entries to keep the EFI partition small
+        configurationLimit = 1; # prune old entries to keep the EFI partition small
       };
       efi.canTouchEfiVariables = true;
     };
@@ -149,6 +149,7 @@
     lsp-plugins
     x42-plugins
     zam-plugins
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
   ];
   
   # This value determines the NixOS release from which the default

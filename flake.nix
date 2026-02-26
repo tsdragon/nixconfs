@@ -2,7 +2,7 @@
   description = "Tal's NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11"; # Use the desired NixOS version
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # Needed for Plasma Login Manager (PLM)
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     
     nix-alien.url = "github:thiagokokada/nix-alien";
@@ -21,6 +21,11 @@
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
