@@ -15,7 +15,7 @@ in
     blender
     openscad
     unityhub
-    LycheeSlicer
+    lycheeslicer
     lycheeWrapper
   ];
 }
