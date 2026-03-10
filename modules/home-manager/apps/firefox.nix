@@ -1,12 +1,9 @@
 { pkgs, inputs, config, lib, ... }:
 
 let
-  # Re-import the firefox-addons *from your main pkgs*, which
-  # already has `allowUnfree = true` if you've set that in your config.
-  #
-  # Because `inputs.firefox-addons` is not a flake that sets allowUnfree,
-  # we bring it back into pkgs by calling it through pkgs.callPackage.
-  firefoxAddons = pkgs.callPackage inputs.firefox-addons { };
+  # Instantiate firefox-addons through its overlay against the current pkgs.
+  # This keeps addon builds aligned with this config (including allowUnfree).
+  firefoxAddons = (inputs.firefox-addons.overlays.default pkgs pkgs)."firefox-addons";
 
   secrets = import ../../../secrets/location.nix;
 
