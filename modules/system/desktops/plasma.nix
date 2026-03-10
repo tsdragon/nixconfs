@@ -8,7 +8,7 @@ let
 in
 {
   services = {
-    displayManager.sddm.enable = true;
+    displayManager.plasma-login-manager.enable = true;
     desktopManager.plasma6.enable = true;
   };
 
@@ -34,9 +34,10 @@ in
   environment.systemPackages = with pkgs; [
     kde-gruvbox
     whitesur-kde
-    kdePackages.qtstyleplugin-kvantum
     hunspell
     qt6.qtwayland
+    kdePackages.kcalc
+    kdePackages.qtstyleplugin-kvantum
   ] ++ spellcheckDicts;
 
   qt.style = "kvantum";
