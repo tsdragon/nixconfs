@@ -32,6 +32,7 @@
     nfs-utils
     p7zip
     unrar
+    bc
   ];
 
   programs = {
