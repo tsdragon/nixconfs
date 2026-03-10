@@ -7,6 +7,7 @@
     ../../modules/system/base/nvidia.nix
     ../../modules/system/users/tal.nix
     ../../modules/system/bundles/general-desktop.nix
+    ../../modules/system/bundles/virtualization.nix
     ../../modules/system/desktops/plasma.nix
     ../../modules/system/bundles/gaming.nix
     ../../modules/system/bundles/desktop-audio.nix
@@ -116,7 +117,6 @@
   
   programs = {
     winbox.enable = true;
-    adb.enable = true;
   };
 
   services = {
@@ -138,8 +138,9 @@
   nixpkgs.overlays = [ (import ../../overlays/av1-overlay.nix) ];
 
   environment.systemPackages = with pkgs; [
+    rpi-imager
     cifs-utils
-    androidenv.androidPkgs.platform-tools
+    android-tools
     yubioath-flutter
     aria2
     qpwgraph
@@ -151,7 +152,7 @@
     zam-plugins
     inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
   ];
-  
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
