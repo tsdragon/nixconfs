@@ -40,7 +40,7 @@ in {
                   }
                   {
                     name = "channel";
-                    value = "unstable";
+                    value = "25.11";
                   }
                   {
                     name = "query";
