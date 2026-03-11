@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgsUnstable, ... }:
 
 {
   security.polkit.enable = true;
@@ -6,7 +6,6 @@
   virtualisation = {
     libvirtd = {
       enable = true;
-      dbus.enable = true;
       qemu = {
         package = pkgs.qemu_kvm;
         runAsRoot = false;
@@ -22,6 +21,20 @@
   services.cockpit = {
     enable = true;
     openFirewall = true;
-    plugins = with pkgs; [ cockpit-machines ];
   };
+
+  environment.systemPackages = [
+    pkgsUnstable.cockpit-machines
+    pkgs.libvirt-dbus
+  ];
+
+  users.users.libvirtdbus = {
+    isSystemUser = true;
+    group = "libvirtdbus";
+    description = "Libvirt D-Bus bridge";
+  };
+  users.groups.libvirtdbus = {};
+
+  systemd.packages = [ pkgs.libvirt-dbus ];
+  services.dbus.packages = [ pkgs.libvirt-dbus ];
 }

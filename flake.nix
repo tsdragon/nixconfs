@@ -2,7 +2,7 @@
   description = "Tal's NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; # Needed for Plasma Login Manager (PLM)
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     
     nix-alien.url = "github:thiagokokada/nix-alien";
@@ -10,7 +10,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -42,6 +42,11 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
+    # Enable unstable pkgs for use with certain apps
+    pkgsUnstableFor = system: import inputs.nixpkgs-unstable {
+      inherit system;
+      config.allowUnfree = true;
+    };
     # Supported systems for your flake packages, shell, etc.
     systems = [
       "aarch64-linux"
@@ -73,7 +78,10 @@
     nixosConfigurations = {
       tal-pc = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs outputs; };
+        specialArgs = {
+          inherit inputs outputs;
+          pkgsUnstable = pkgsUnstableFor "x86_64-linux";
+        };
         modules = [
           inputs.vscode-server.nixosModules.default
           inputs.nix-flatpak.nixosModules.nix-flatpak
@@ -87,7 +95,10 @@
     homeConfigurations = {
       "tal@tal-pc" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = {
+          inherit inputs outputs;
+          pkgsUnstable = pkgsUnstableFor "x86_64-linux";
+        };
         modules = [
           ./hosts/tal-pc/home.nix
         ];

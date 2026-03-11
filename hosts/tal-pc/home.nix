@@ -8,7 +8,7 @@
     ../../modules/home-manager/bundles/android_dev.nix
     ../../modules/home-manager/bundles/messaging.nix
     ../../modules/home-manager/bundles/photos.nix
-    ../../modules/home-manager/bundles/ripping.nix
+    #../../modules/home-manager/bundles/ripping.nix
     ../../modules/home-manager/bundles/video_editing.nix
     ../../modules/home-manager/themes/kvantum_themes.nix
     ../../modules/home-manager/apps/zsh.nix

@@ -8,7 +8,7 @@ let
 in
 {
   services = {
-    displayManager.plasma-login-manager.enable = true;
+    displayManager.sddm.enable = true;
     desktopManager.plasma6.enable = true;
   };
 
