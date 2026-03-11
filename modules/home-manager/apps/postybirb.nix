@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 
 let
-  version = "3.1.65";
-  appimageSha256  = "sha256-AQM04BEdAphACzJ+JR5UE5DQiXTmnKunSorNd5tLjsA=";
+  version = "3.1.69";
+  appimageSha256  = "sha256-CqmcxELBFfWlZ+PFj/Fa+ZRiJLCuNxw+U01Pkzfw7oA=";
 
   postybirbAppImage = pkgs.fetchurl {
     url    = "https://github.com/mvdicarlo/postybirb-plus/releases/download/v${version}/postybirb-plus-${version}-x86_64.AppImage";
@@ -42,7 +42,7 @@ let
     '';
   };
 in {
-  # Expose `postybirb` in your PATH via `home.packages`.
+  # Expose `postybirb` in PATH via `home.packages`.
   home.packages = [
     postybirb
   ];
