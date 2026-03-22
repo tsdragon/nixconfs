@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "jnoortheen.nix-ide",
+    "signageos.signageos-vscode-sops",
+    "openai.chatgpt",
+    "github.copilot",
+    "github.copilot-chat"
+  ],
+  "unwantedRecommendations": [
+    "redhat.java",
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-dependency",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-maven"
+  ]
+}

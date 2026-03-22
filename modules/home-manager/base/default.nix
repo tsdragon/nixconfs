@@ -6,14 +6,9 @@
     vlc
     spotify
     tidal-hifi
+    # Install VS Code without letting Home Manager own ~/.config/Code/User/settings.json.
+    vscode
   ];
-
-  programs.vscode = {
-    enable = true;
-    profiles.default.userSettings = {
-      "update.mode" = "none";
-    };
-  };
 
   xdg = {
       enable = true;

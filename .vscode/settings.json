@@ -1,0 +1,11 @@
+{
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "gradle.autoDetect": "off",
+  "java.gradle.buildServer.enabled": "off",
+  "java.import.gradle.enabled": false,
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "sops.binPath": "sops"
+}
