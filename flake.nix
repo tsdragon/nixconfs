@@ -42,6 +42,10 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
+    pkgsFor = system: import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
     # Enable unstable pkgs for use with certain apps
     pkgsUnstableFor = system: import inputs.nixpkgs-unstable {
       inherit system;
@@ -62,7 +66,7 @@
 
     # Formatter for your nix files, available through 'nix fmt'
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
-    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+    formatter = forAllSystems (system: (pkgsFor system).alejandra);
 
     # Your custom packages and modifications, exported as overlays
     #overlays = import ./overlays {inherit inputs;};
@@ -94,7 +98,7 @@
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       "tal@tal-pc" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = pkgsFor "x86_64-linux";
         extraSpecialArgs = {
           inherit inputs outputs;
           pkgsUnstable = pkgsUnstableFor "x86_64-linux";
