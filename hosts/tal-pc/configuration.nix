@@ -73,6 +73,7 @@
       systemd-boot = {
         enable = true;
         configurationLimit = 1; # prune old entries to keep the EFI partition small
+        consoleMode = "max"; # keep the pre-kernel framebuffer as close to native as possible
       };
       efi.canTouchEfiVariables = true;
     };
@@ -81,18 +82,14 @@
     blacklistedKernelModules = [ "amdgpu" ];
 
     initrd = {
+      systemd.enable = true;
       kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
     };
 
     plymouth = {
       enable = true;
-      theme = "dna";
-      themePackages = with pkgs; [
-        # By default we would install all themes
-        (adi1090x-plymouth-themes.override {
-          selected_themes = [ "dna" ];
-        })
-      ];
+      # Reuse the firmware logo for a more continuous UEFI -> kernel -> userspace handoff.
+      theme = "bgrt";
     };
 
     # Enable "Silent boot"
@@ -100,9 +97,9 @@
     initrd.verbose = false;
     kernelParams = [
       "quiet"
-      "splash"
       "udev.log_priority=3"
-      "rd.systemd.show_status=auto"
+      "rd.systemd.show_status=false"
+      "vt.global_cursor_default=0"
       "video=DP-0:5120x1440@60e"
     ];
     # Hide the OS choice for bootloaders.
@@ -118,7 +115,10 @@
   
   programs = {
     winbox.enable = true;
+    adb.enable = true;
   };
+
+  
 
   services = {
     pcscd.enable = true;
