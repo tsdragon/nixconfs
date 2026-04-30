@@ -1,9 +1,43 @@
-{ pkgs, inputs, config, lib, ... }:
+{ pkgs, inputs, config, ... }:
 
 let
   # Instantiate firefox-addons through its overlay against the current pkgs.
   # This keeps addon builds aligned with this config (including allowUnfree).
   firefoxAddons = (inputs.firefox-addons.overlays.default pkgs pkgs)."firefox-addons";
+  bitwardenWidget = "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action";
+  toolbarState = builtins.toJSON {
+    placements = {
+      "widget-overflow-fixed-list" = [];
+      "nav-bar" = [
+        "back-button"
+        "forward-button"
+        "stop-reload-button"
+        "home-button"
+        "urlbar-container"
+        "downloads-button"
+        "library-button"
+        bitwardenWidget
+        "unified-extensions-button"
+      ];
+      "toolbar-menubar" = [ "menubar-items" ];
+      "TabsToolbar" = [ "tabbrowser-tabs" "new-tab-button" "alltabs-button" ];
+      "PersonalToolbar" = [ "import-button" "personal-bookmarks" ];
+    };
+    seen = [
+      "save-to-pocket-button"
+      "developer-button"
+      bitwardenWidget
+    ];
+    dirtyAreaCache = [
+      "nav-bar"
+      "PersonalToolbar"
+      "toolbar-menubar"
+      "TabsToolbar"
+      "widget-overflow-fixed-list"
+    ];
+    currentVersion = 23;
+    newElementCount = 1;
+  };
 
   secrets = import ../../../secrets/location.nix;
 
@@ -66,8 +100,7 @@ in {
           "browser.shell.defaultBrowserCheckCount" = 1;
           #"browser.startup.homepage" = "https://start.duckduckgo.com";
 
-          # taken from Misterio77's config
-          "browser.uiCustomization.state" = ''{"placements":{"widget-overflow-fixed-list":[],"nav-bar":["back-button","forward-button","stop-reload-button","home-button","urlbar-container","downloads-button","library-button","ublock0_raymondhill_net-browser-action","_testpilot-containers-browser-action"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","new-tab-button","alltabs-button"],"PersonalToolbar":["import-button","personal-bookmarks"]},"seen":["save-to-pocket-button","developer-button","ublock0_raymondhill_net-browser-action","_testpilot-containers-browser-action"],"dirtyAreaCache":["nav-bar","PersonalToolbar","toolbar-menubar","TabsToolbar","widget-overflow-fixed-list"],"currentVersion":18,"newElementCount":4}'';
+          "browser.uiCustomization.state" = toolbarState;
           "dom.security.https_only_mode" = true;
           #"identity.fxaccounts.enabled" = false;
 
