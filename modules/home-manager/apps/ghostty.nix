@@ -43,8 +43,8 @@
   };
 
   # Fix kde and dolphin terminal weirdness
-  home.activation.kdeDefaultTerminal = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.kdeDefaultTerminal = lib.mkDefault (lib.hm.dag.entryAfter ["writeBoundary"] ''
     ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalApplication ghostty
     ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalService com.mitchellh.ghostty.desktop
-  '';
+  '');
 }
