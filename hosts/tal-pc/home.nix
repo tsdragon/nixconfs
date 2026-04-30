@@ -20,7 +20,6 @@
     ../../modules/home-manager/apps/roon.nix
     ../../modules/home-manager/apps/git.nix
     ../../modules/home-manager/apps/claude.nix
-    ../../modules/home-manager/apps/ai-file-sorter.nix
     ../../modules/home-manager/bundles/streaming.nix
     #../../modules/home-manager/apps/vnyan.nix
   ];
