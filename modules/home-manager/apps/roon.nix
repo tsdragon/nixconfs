@@ -231,6 +231,32 @@ in {
       x-scheme-handler/roon=roon-client.desktop;
     '';
 
+    systemd.user.services.roon-pipewire-loopback = {
+      Unit = {
+        Description = "Route Roon Bridge ALSA loopback into PipeWire";
+        After = [
+          "pipewire.service"
+          "pipewire-pulse.service"
+          "wireplumber.service"
+        ];
+        Wants = [
+          "pipewire.service"
+          "pipewire-pulse.service"
+          "wireplumber.service"
+        ];
+        PartOf = ["pipewire.service"];
+      };
+
+      Service = {
+        ExecStartPre = "${pkgs.coreutils}/bin/test -e /proc/asound/RoonPipeWire";
+        ExecStart = "${pkgs.alsa-utils}/bin/alsaloop -C hw:RoonPipeWire,1,0 -P pipewire -t 100000 -S 5 -A 5 -n";
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+
+      Install.WantedBy = ["default.target"];
+    };
+
     home.activation.pruneRoonWineDesktopEntries = lib.hm.dag.entryAfter ["writeBoundary"] pruneWineDesktopEntries;
     home.activation.syncRoonIcons = lib.hm.dag.entryAfter ["writeBoundary"] syncRoonIcons;
   };

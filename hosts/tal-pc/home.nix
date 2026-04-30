@@ -14,10 +14,15 @@
     ../../modules/home-manager/apps/zsh.nix
     ../../modules/home-manager/apps/firefox.nix
     ../../modules/home-manager/apps/kitty.nix
+    ../../modules/home-manager/apps/ghostty.nix
+    ../../modules/home-manager/apps/parsec.nix
     ../../modules/home-manager/apps/postybirb.nix
+    ../../modules/home-manager/apps/roon.nix
     ../../modules/home-manager/apps/git.nix
+    ../../modules/home-manager/apps/claude.nix
+    ../../modules/home-manager/apps/ai-file-sorter.nix
     ../../modules/home-manager/bundles/streaming.nix
-    #../../modules/home-manager/apps/vnyan.nix   
+    #../../modules/home-manager/apps/vnyan.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -29,11 +34,11 @@
 
   programs = {
     home-manager.enable = true;
+    roon-client.enable = true;
     #vnyan.enable = true;
   };
 
   home.packages = with pkgs; [
-    parsec-bin
     gimp-with-plugins
     onlyoffice-desktopeditors
     obsidian
