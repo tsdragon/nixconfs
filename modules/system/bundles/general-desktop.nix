@@ -1,12 +1,15 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   hardware.bluetooth.enable = true;
 
   services.vscode-server = {
     enable = true;
     # VS Code tunnels install their server payload under ~/.vscode/cli/servers.
-    installPath = [ "$HOME/.vscode-server" "$HOME/.vscode" ];
+    installPath = ["$HOME/.vscode-server" "$HOME/.vscode"];
   };
 
   environment.systemPackages = with pkgs; [
@@ -41,10 +44,12 @@
     #media-session.enable = true;
   };
 
-  fonts.packages = with pkgs; [
-    corefonts
-    ubuntu-classic
-  ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues nerd-fonts);
+  fonts.packages = with pkgs;
+    [
+      corefonts
+      ubuntu-classic
+    ]
+    ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues nerd-fonts);
 
   fonts.enableDefaultPackages = true;
   fonts.fontconfig = {

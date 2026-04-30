@@ -1,9 +1,6 @@
-{ pkgsUnstable, ... }:
-
-let
+{pkgsUnstable, ...}: let
   openWebuiImage = "ghcr.io/open-webui/open-webui:v0.8.12";
-in
-{
+in {
   services.ollama = {
     enable = true;
     package = pkgsUnstable.ollama-cuda;

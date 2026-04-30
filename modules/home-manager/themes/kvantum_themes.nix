@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   home.file = {
     ".config/kvantum/Sweet-transparent-toolbar/Sweet-transparent-toolbar.kvconfig" = {
       source = pkgs.fetchurl {

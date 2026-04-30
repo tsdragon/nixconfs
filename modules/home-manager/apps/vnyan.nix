@@ -1,9 +1,13 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs.vnyan;
 
-  envExports = lib.concatStringsSep "\n"
+  envExports =
+    lib.concatStringsSep "\n"
     (lib.mapAttrsToList (name: value: "export ${name}=\"${value}\"") cfg.environment);
 
   vnyanWrapper = pkgs.writeShellScriptBin "vnyan" ''
@@ -57,11 +61,10 @@ let
     name = "vnyan";
     desktopName = "Vnyan";
     exec = "vnyan";
-    categories = [ "AudioVideo" "Graphics" "Game" ];
+    categories = ["AudioVideo" "Graphics" "Game"];
     comment = "Run Vnyan with Wine";
   };
-in
-{
+in {
   options.programs.vnyan = {
     enable = lib.mkEnableOption "Vnyan (Wine wrapper + winetricks helpers)";
 
@@ -105,7 +108,7 @@ in
 
     winetricksPackages = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ "vcrun2019" "dotnet48" ];
+      default = ["vcrun2019" "dotnet48"];
       description = "Winetricks verbs to install in the Vnyan prefix.";
     };
   };

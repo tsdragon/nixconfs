@@ -1,6 +1,9 @@
-{ config, pkgs, inputs, ... }:
-
 {
+  config,
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/base/default.nix
@@ -34,7 +37,7 @@
       iptables -A nixos-fw -i br0 -s 192.168.1.241/32 -p udp --dport 32768:60999 -j nixos-fw-accept
     '';
     # ifacialmocap Ports
-    allowedUDPPorts = [ 49983 ];
+    allowedUDPPorts = [49983];
     # Optional (usually not needed for realtime streaming):
     # allowedTCPPorts = [ 49987 ];
   };
@@ -94,11 +97,11 @@
     };
 
     # Prevent the iGPU (amdgpu) from binding DRM so only the NVIDIA dGPU drives displays.
-    blacklistedKernelModules = [ "amdgpu" ];
+    blacklistedKernelModules = ["amdgpu"];
 
     initrd = {
       systemd.enable = true;
-      kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
+      kernelModules = ["nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm"];
     };
 
     plymouth = {
@@ -126,13 +129,11 @@
     enableRedistributableFirmware = true;
     cpu.amd.updateMicrocode = true;
   };
-  
+
   programs = {
     winbox.enable = true;
     adb.enable = true;
   };
-
-  
 
   services = {
     pcscd.enable = true;
@@ -150,7 +151,7 @@
     };
   };
 
-  nixpkgs.overlays = [ (import ../../overlays/av1-overlay.nix) ];
+  nixpkgs.overlays = [(import ../../overlays/av1-overlay.nix)];
 
   environment.systemPackages = with pkgs; [
     rpi-imager

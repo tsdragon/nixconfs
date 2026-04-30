@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   options.identity = {
     name = lib.mkOption {
       type = lib.types.str;

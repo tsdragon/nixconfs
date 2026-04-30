@@ -1,16 +1,18 @@
-{ config, pkgs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   version = "3.1.70";
-  appimageSha256  = "sha256-bjppwC6vwtRC+962J6U8qjc1tDA7b5qzg6Ct7T/m6iY=";
+  appimageSha256 = "sha256-bjppwC6vwtRC+962J6U8qjc1tDA7b5qzg6Ct7T/m6iY=";
 
   postybirbAppImage = pkgs.fetchurl {
-    url    = "https://github.com/mvdicarlo/postybirb-plus/releases/download/v${version}/postybirb-plus-${version}-x86_64.AppImage";
+    url = "https://github.com/mvdicarlo/postybirb-plus/releases/download/v${version}/postybirb-plus-${version}-x86_64.AppImage";
     sha256 = appimageSha256;
   };
 
   postybirbIcon = pkgs.fetchurl {
-    url    = "https://raw.githubusercontent.com/mvdicarlo/postybirb-plus/master/electron-app/packaging-resources/icon.png";
+    url = "https://raw.githubusercontent.com/mvdicarlo/postybirb-plus/master/electron-app/packaging-resources/icon.png";
     sha256 = "sha256-iSe3DJh2R3yqoR7GVPijw1T2FvXB8SJEUA1TqL6kH5M=";
   };
 
@@ -18,7 +20,7 @@ let
   postybirb = pkgs.appimageTools.wrapType2 {
     pname = "postybirb";
     version = version;
-    src  = postybirbAppImage;
+    src = postybirbAppImage;
 
     extraInstallCommands = ''
       # Create the directories

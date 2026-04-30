@@ -1,12 +1,14 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   spellcheckDicts = with pkgs.hunspellDicts; [
     en_CA
     en_US
   ];
-in
-{
+in {
   services = {
     displayManager.sddm.enable = true;
     desktopManager.plasma6.enable = true;
@@ -19,7 +21,7 @@ in
       pkgs.kdePackages.xdg-desktop-portal-kde
       pkgs.xdg-desktop-portal-gtk
     ];
-    configPackages = [ pkgs.kdePackages.plasma-workspace ];
+    configPackages = [pkgs.kdePackages.plasma-workspace];
   };
 
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
@@ -31,14 +33,16 @@ in
     discover
   ];
 
-  environment.systemPackages = with pkgs; [
-    kde-gruvbox
-    whitesur-kde
-    hunspell
-    qt6.qtwayland
-    kdePackages.kcalc
-    kdePackages.qtstyleplugin-kvantum
-  ] ++ spellcheckDicts;
+  environment.systemPackages = with pkgs;
+    [
+      kde-gruvbox
+      whitesur-kde
+      hunspell
+      qt6.qtwayland
+      kdePackages.kcalc
+      kdePackages.qtstyleplugin-kvantum
+    ]
+    ++ spellcheckDicts;
 
   qt.style = "kvantum";
 

@@ -1,11 +1,14 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   hardware.keyboard.qmk.enable = true;
 
   environment.systemPackages = with pkgs; [
-     via
+    via
   ];
-  
-  services.udev.packages = [ pkgs.via ];
+
+  services.udev.packages = [pkgs.via];
 }

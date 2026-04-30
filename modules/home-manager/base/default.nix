@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   home.packages = with pkgs; [
     shared-mime-info
     vlc
@@ -11,9 +14,9 @@
   ];
 
   xdg = {
-      enable = true;
-      mime.enable = true;
-      systemDirs.data = [ "${config.home.homeDirectory}/.nix-profile/share/applications" ];
+    enable = true;
+    mime.enable = true;
+    systemDirs.data = ["${config.home.homeDirectory}/.nix-profile/share/applications"];
   };
 
   # Manage mimeapps.list

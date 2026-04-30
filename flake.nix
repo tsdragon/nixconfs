@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    
+
     nix-alien.url = "github:thiagokokada/nix-alien";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -42,15 +42,17 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    pkgsFor = system: import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-    };
+    pkgsFor = system:
+      import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     # Enable unstable pkgs for use with certain apps
-    pkgsUnstableFor = system: import inputs.nixpkgs-unstable {
-      inherit system;
-      config.allowUnfree = true;
-    };
+    pkgsUnstableFor = system:
+      import inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
     # Supported systems for your flake packages, shell, etc.
     systems = [
       "aarch64-linux"
@@ -63,7 +65,6 @@
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-
     # Formatter for your nix files, available through 'nix fmt'
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: (pkgsFor system).alejandra);

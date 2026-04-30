@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   androidPkgs = pkgs.androidenv.androidPkgs;
   # Use a writable SDK path so Gradle can install missing components.
   useNixSdk = false;
@@ -11,25 +14,25 @@ let
     else "${config.home.homeDirectory}/Android/Sdk";
 
   androidSdkPackages =
-    lib.optionals (useNixSdk && hasSdk) [ androidPkgs.androidsdk ]
+    lib.optionals (useNixSdk && hasSdk) [androidPkgs.androidsdk]
     ++ lib.optionals (!useNixSdk) (lib.optionals (androidPkgs ? "cmdline-tools-latest") [
       androidPkgs."cmdline-tools-latest"
     ])
     ++ lib.optionals (!useNixSdk) (lib.optionals (androidPkgs ? "platform-tools") [
       androidPkgs."platform-tools"
     ]);
-in
-{
-
+in {
   nixpkgs.config.android_sdk.accept_license = true;
 
-  home.packages = with pkgs; [
-    jdk17
-    gradle
-    kotlin
-    cmake
-    ninja
-  ] ++ androidSdkPackages;
+  home.packages = with pkgs;
+    [
+      jdk17
+      gradle
+      kotlin
+      cmake
+      ninja
+    ]
+    ++ androidSdkPackages;
 
   home.sessionVariables = {
     ANDROID_SDK_ROOT = lib.mkDefault sdkRoot;

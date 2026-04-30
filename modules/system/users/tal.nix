@@ -1,5 +1,9 @@
-{ config, pkgs, lib, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   commonCifsOptions = [
     "x-systemd.automount"
     "x-systemd.idle-timeout=0"
@@ -10,10 +14,9 @@ let
     "vers=3.1.1"
     "nofail"
   ];
-in
-{
+in {
   users.groups.plugdev = {};
-  users.groups.urf = { gid = 1010; };
+  users.groups.urf = {gid = 1010;};
 
   users.users = {
     tal = {
@@ -22,8 +25,19 @@ in
       name = "tal";
       description = "Tal";
       extraGroups = [
-        "wheel" "networkmanager" "libvirtd" "docker" "adbusers"
-        "flatpak" "qemu" "kvm" "audio" "video" "plugdev" "aria2" "urf"
+        "wheel"
+        "networkmanager"
+        "libvirtd"
+        "docker"
+        "adbusers"
+        "flatpak"
+        "qemu"
+        "kvm"
+        "audio"
+        "video"
+        "plugdev"
+        "aria2"
+        "urf"
         "dialout"
       ];
       initialPassword = "your-password"; # Replace with a secure password
@@ -50,16 +64,19 @@ in
     #  device = "//192.168.1.200/ReadOnlyShare";
     #  fsType = "cifs";
     #  # Use the ++ operator to append to the list
-    #  options = commonCifsOptions ++ [ "ro" ]; 
+    #  options = commonCifsOptions ++ [ "ro" ];
     #};
   };
 
   # Enable passwordless sudo for user tal
   security.sudo.extraRules = [
     {
-      users = [ "tal" ];
+      users = ["tal"];
       commands = [
-        { command = "ALL"; options = [ "NOPASSWD" ]; }
+        {
+          command = "ALL";
+          options = ["NOPASSWD"];
+        }
       ];
     }
   ];

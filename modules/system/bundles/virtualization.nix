@@ -1,6 +1,8 @@
-{ pkgs, pkgsUnstable, ... }:
-
 {
+  pkgs,
+  pkgsUnstable,
+  ...
+}: {
   security.polkit.enable = true;
 
   virtualisation = {
@@ -35,6 +37,6 @@
   };
   users.groups.libvirtdbus = {};
 
-  systemd.packages = [ pkgs.libvirt-dbus ];
-  services.dbus.packages = [ pkgs.libvirt-dbus ];
+  systemd.packages = [pkgs.libvirt-dbus];
+  services.dbus.packages = [pkgs.libvirt-dbus];
 }

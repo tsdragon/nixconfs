@@ -1,7 +1,8 @@
-{ pkgs, pkgsUnstable, ... }:
-
-
 {
+  pkgs,
+  pkgsUnstable,
+  ...
+}: {
   home.packages = [
     # Stable is missing libzip include, using unstable for now.
     pkgsUnstable.telegram-desktop

@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # OBS Studio with plugins
   programs.obs-studio = {
     enable = true;
@@ -23,5 +21,4 @@
       obs-vkcapture
     ];
   };
-
 }

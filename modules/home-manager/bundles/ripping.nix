@@ -1,5 +1,8 @@
-{ pkgs, pkgsUnstable, ... }:
 {
+  pkgs,
+  pkgsUnstable,
+  ...
+}: {
   home.packages = with pkgs; [
     pkgsUnstable.exactaudiocopy
     flac

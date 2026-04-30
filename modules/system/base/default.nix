@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   nix.settings = {
     experimental-features = "nix-command flakes";
     download-buffer-size = 524288000;
@@ -12,7 +15,7 @@
     options = "--delete-older-than 10d";
   };
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = ["ntfs"];
 
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_CA.UTF-8";

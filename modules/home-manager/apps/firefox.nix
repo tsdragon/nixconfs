@@ -1,6 +1,9 @@
-{ pkgs, inputs, config, ... }:
-
-let
+{
+  pkgs,
+  inputs,
+  config,
+  ...
+}: let
   # Instantiate firefox-addons through its overlay against the current pkgs.
   # This keeps addon builds aligned with this config (including allowUnfree).
   firefoxAddons = (inputs.firefox-addons.overlays.default pkgs pkgs)."firefox-addons";
@@ -19,9 +22,9 @@ let
         bitwardenWidget
         "unified-extensions-button"
       ];
-      "toolbar-menubar" = [ "menubar-items" ];
-      "TabsToolbar" = [ "tabbrowser-tabs" "new-tab-button" "alltabs-button" ];
-      "PersonalToolbar" = [ "import-button" "personal-bookmarks" ];
+      "toolbar-menubar" = ["menubar-items"];
+      "TabsToolbar" = ["tabbrowser-tabs" "new-tab-button" "alltabs-button"];
+      "PersonalToolbar" = ["import-button" "personal-bookmarks"];
     };
     seen = [
       "save-to-pocket-button"
@@ -40,12 +43,10 @@ let
   };
 
   secrets = import ../../../secrets/location.nix;
-
 in {
   programs.firefox = {
     enable = true;
     profiles = {
-
       ${config.home.username} = {
         isDefault = true;
         path = "myprofile";
@@ -126,7 +127,7 @@ in {
   #    ".mozilla"
   #    ".cache/mozilla"
   #  ];
-  #  
+  #
   #  # We want to preserve only these handful of files in the `myprofile` directory:
   #  persistence = {
   #    # Cookies:
