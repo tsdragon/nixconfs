@@ -3,7 +3,11 @@
 {
   hardware.bluetooth.enable = true;
 
-  services.vscode-server.enable = true;
+  services.vscode-server = {
+    enable = true;
+    # VS Code tunnels install their server payload under ~/.vscode/cli/servers.
+    installPath = [ "$HOME/.vscode-server" "$HOME/.vscode" ];
+  };
 
   environment.systemPackages = with pkgs; [
     #vscode
