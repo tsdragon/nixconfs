@@ -19,8 +19,21 @@
 
   networking.hostName = "tal-pc";
 
+  services.roon-bridge = {
+    enable = true;
+    openFirewall = true;
+  };
+
   networking.firewall = {
     enable = true;
+    # Roon Bridge opens per-output RAAT listeners in the ephemeral range:
+    # TCP for audio and UDP for the clock. Limit those dynamic connections to
+    # the Roon Core observed in RAAT logs.
+    extraCommands = ''
+      iptables -A nixos-fw -i br0 -s 192.168.1.241/32 -p tcp --dport 32768:60999 -j nixos-fw-accept
+      iptables -A nixos-fw -i br0 -s 192.168.1.241/32 -p udp --dport 32768:60999 -j nixos-fw-accept
+    '';
+    # ifacialmocap Ports
     allowedUDPPorts = [ 49983 ];
     # Optional (usually not needed for realtime streaming):
     # allowedTCPPorts = [ 49987 ];
@@ -68,6 +81,8 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
+    # Temporary pin: NVIDIA 580.119.02 in current nixpkgs does not build against 6.19 yet.
+    #kernelPackages = pkgs.linuxPackages_6_18;
 
     loader = {
       systemd-boot = {
@@ -100,7 +115,6 @@
       "udev.log_priority=3"
       "rd.systemd.show_status=false"
       "vt.global_cursor_default=0"
-      "video=DP-0:5120x1440@60e"
     ];
     # Hide the OS choice for bootloaders.
     # It's still possible to open the bootloader list by pressing any key
