@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ pkgsUnstable, ... }:
 
 let
-  openWebuiImage = "ghcr.io/open-webui/open-webui:v0.8.8";
+  openWebuiImage = "ghcr.io/open-webui/open-webui:v0.8.12";
 in
 {
   services.ollama = {
     enable = true;
-    package = pkgs.ollama-cuda;
+    package = pkgsUnstable.ollama-cuda;
   };
 
   # Persist Open WebUI state outside the container filesystem.
