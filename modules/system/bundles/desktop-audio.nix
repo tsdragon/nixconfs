@@ -1,5 +1,12 @@
 { config, pkgs, lib, ... }:
 {
+  boot = {
+    kernelModules = [ "snd-aloop" ];
+    extraModprobeConfig = ''
+      options snd-aloop id=RoonPipeWire index=8 enable=1 pcm_substreams=1 pcm_notify=1
+    '';
+  };
+
   # General-purpose low-latency PipeWire tuning that keeps several common rates available.
   services.pipewire.extraConfig.pipewire."10-desktop-audio" = {
     "context.properties" = {
