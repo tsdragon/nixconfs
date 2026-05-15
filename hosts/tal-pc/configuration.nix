@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   inputs,
   ...
@@ -42,6 +41,8 @@
     # allowedTCPPorts = [ 49987 ];
   };
 
+  networking.networkmanager.settings.main.no-auto-default = "*";
+
   networking.networkmanager.ensureProfiles.profiles = {
     br0 = {
       connection = {
@@ -49,6 +50,7 @@
         type = "bridge";
         interface-name = "br0";
         autoconnect = true;
+        autoconnect-priority = 100;
       };
       ipv4.method = "auto";
       ipv6.method = "auto";
@@ -63,6 +65,7 @@
         master = "br0";
         port-type = "bridge";
         autoconnect = true;
+        autoconnect-priority = 100;
       };
       ipv4.method = "disabled";
       ipv6.method = "disabled";
@@ -76,6 +79,7 @@
         master = "br0";
         port-type = "bridge";
         autoconnect = true;
+        autoconnect-priority = 100;
       };
       ipv4.method = "disabled";
       ipv6.method = "disabled";
@@ -104,25 +108,18 @@
       kernelModules = ["nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm"];
     };
 
-    plymouth = {
-      enable = true;
-      # Reuse the firmware logo for a more continuous UEFI -> kernel -> userspace handoff.
-      theme = "bgrt";
+  };
+
+  systemd = {
+    settings.Manager = {
+      DefaultLimitNOFILE = "524288";
     };
 
-    # Enable "Silent boot"
-    consoleLogLevel = 3;
-    initrd.verbose = false;
-    kernelParams = [
-      "quiet"
-      "udev.log_priority=3"
-      "rd.systemd.show_status=false"
-      "vt.global_cursor_default=0"
-    ];
-    # Hide the OS choice for bootloaders.
-    # It's still possible to open the bootloader list by pressing any key
-    # It will just not appear on screen unless a key is pressed
-    loader.timeout = 0;
+    # Plasma/Wayland can pass many DRM sync file descriptors between processes;
+    # avoid the low 1024 soft limit that showed up in the journal.
+    user.extraConfig = ''
+      DefaultLimitNOFILE=524288
+    '';
   };
 
   hardware = {
@@ -151,7 +148,10 @@
     };
   };
 
-  nixpkgs.overlays = [(import ../../overlays/av1-overlay.nix)];
+  nixpkgs.overlays = [
+    (import ../../overlays/av1-overlay.nix)
+    (import ../../overlays/roon-bridge.nix)
+  ];
 
   environment.systemPackages = with pkgs; [
     rpi-imager
