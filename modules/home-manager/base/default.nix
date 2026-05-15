@@ -4,13 +4,14 @@
   lib,
   ...
 }: {
+  imports = [
+    ../apps/vscode.nix
+  ];
+
   home.packages = with pkgs; [
     shared-mime-info
     vlc
-    spotify
     tidal-hifi
-    # Install VS Code without letting Home Manager own ~/.config/Code/User/settings.json.
-    vscode
   ];
 
   xdg = {
