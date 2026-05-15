@@ -5,5 +5,6 @@
     ffmpeg
     mkvtoolnix
     kdePackages.kdenlive
+    davinci-resolve
   ];
 }
