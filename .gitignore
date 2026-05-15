@@ -24,3 +24,6 @@ shell.nix
 
 # Ignore cache directory
 .cache/
+
+# Ignore codex garbage
+.codex
