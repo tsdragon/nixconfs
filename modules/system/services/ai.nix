@@ -1,29 +1,17 @@
-{pkgsUnstable, ...}: let
-  openWebuiImage = "ghcr.io/open-webui/open-webui:v0.8.12";
-in {
-  services.ollama = {
-    enable = true;
-    package = pkgsUnstable.ollama-cuda;
-  };
-
-  # Persist Open WebUI state outside the container filesystem.
-  systemd.tmpfiles.rules = [
-    "d /var/lib/open-webui 0750 root root -"
+{pkgs, ...}: {
+  services.flatpak.packages = [
+    rec {
+      appId = "io.github.block.Goose";
+      sha256 = "1jgpj8f4sbbdha81gpy26xkxjrcvf4fp2pq7c22kkkq147s35bb1";
+      bundle = "${pkgs.fetchurl {
+        url = "https://github.com/aaif-goose/goose/releases/download/v1.34.1/io.github.block.Goose_stable_x86_64.flatpak";
+        inherit sha256;
+      }}";
+    }
   ];
 
-  virtualisation.oci-containers.backend = "podman";
-
-  virtualisation.oci-containers.containers.open-webui = {
-    image = openWebuiImage;
-    environment = {
-      OLLAMA_BASE_URL = "http://127.0.0.1:11434";
-      OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
-    };
-    volumes = [
-      "/var/lib/open-webui:/app/backend/data"
-    ];
-    extraOptions = [
-      "--network=host"
-    ];
-  };
+  services.flatpak.overrides.settings."io.github.block.Goose".Context.filesystems = [
+    "/home/tal/Documents/sanctuary"
+    "/home/tal/.config/nixconfs"
+  ];
 }

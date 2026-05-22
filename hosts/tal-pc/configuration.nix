@@ -1,8 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/base/default.nix
@@ -107,7 +103,6 @@
       systemd.enable = true;
       kernelModules = ["nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm"];
     };
-
   };
 
   systemd = {
@@ -166,7 +161,6 @@
     lsp-plugins
     x42-plugins
     zam-plugins
-    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
   ];
 
   # This value determines the NixOS release from which the default
