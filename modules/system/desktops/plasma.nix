@@ -1,11 +1,8 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }: let
-  plasmaWorkspace = pkgs.kdePackages.plasma-workspace;
-  plasmaWayland = "${plasmaWorkspace}/libexec/plasma-dbus-run-session-if-needed ${plasmaWorkspace}/bin/startplasma-wayland";
   spellcheckDicts = with pkgs.hunspellDicts; [
     en_CA
     en_US
