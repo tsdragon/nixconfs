@@ -22,66 +22,6 @@
     openFirewall = true;
   };
 
-  networking.firewall = {
-    enable = true;
-    # Roon Bridge opens per-output RAAT listeners in the ephemeral range:
-    # TCP for audio and UDP for the clock. Limit those dynamic connections to
-    # the Roon Core observed in RAAT logs.
-    extraCommands = ''
-      iptables -A nixos-fw -i br0 -s 192.168.1.241/32 -p tcp --dport 32768:60999 -j nixos-fw-accept
-      iptables -A nixos-fw -i br0 -s 192.168.1.241/32 -p udp --dport 32768:60999 -j nixos-fw-accept
-    '';
-    # ifacialmocap Ports
-    allowedUDPPorts = [49983];
-    # Optional (usually not needed for realtime streaming):
-    # allowedTCPPorts = [ 49987 ];
-  };
-
-  networking.networkmanager.settings.main.no-auto-default = "*";
-
-  networking.networkmanager.ensureProfiles.profiles = {
-    br0 = {
-      connection = {
-        id = "br0";
-        type = "bridge";
-        interface-name = "br0";
-        autoconnect = true;
-        autoconnect-priority = 100;
-      };
-      ipv4.method = "auto";
-      ipv6.method = "auto";
-      bridge.stp = "false";
-    };
-
-    "eno1->br0" = {
-      connection = {
-        id = "eno1->br0";
-        type = "ethernet";
-        interface-name = "eno1";
-        master = "br0";
-        port-type = "bridge";
-        autoconnect = true;
-        autoconnect-priority = 100;
-      };
-      ipv4.method = "disabled";
-      ipv6.method = "disabled";
-    };
-
-    "eno2->br0" = {
-      connection = {
-        id = "eno2->br0";
-        type = "ethernet";
-        interface-name = "eno2";
-        master = "br0";
-        port-type = "bridge";
-        autoconnect = true;
-        autoconnect-priority = 100;
-      };
-      ipv4.method = "disabled";
-      ipv6.method = "disabled";
-    };
-  };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
     # Temporary pin: NVIDIA 580.119.02 in current nixpkgs does not build against 6.19 yet.
