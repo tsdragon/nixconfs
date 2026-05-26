@@ -24,13 +24,11 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
-    # Temporary pin: NVIDIA 580.119.02 in current nixpkgs does not build against 6.19 yet.
-    #kernelPackages = pkgs.linuxPackages_6_18;
 
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 1; # prune old entries to keep the EFI partition small
+        configurationLimit = 3; # keep a small rollback window without filling the EFI partition
         consoleMode = "max"; # keep the pre-kernel framebuffer as close to native as possible
       };
       efi.canTouchEfiVariables = true;
@@ -93,7 +91,6 @@
     cifs-utils
     android-tools
     yubioath-flutter
-    aria2
     qpwgraph
     helvum
     carla

@@ -36,6 +36,7 @@
     p7zip
     unrar
     bc
+    aria2
   ];
 
   programs = {
@@ -63,5 +64,19 @@
     gvfs = {
       enable = true;
     };
+    aria2 = {
+      enable = true;
+      rpcSecretFile = "/var/lib/aria2/rpc-secret";
+      serviceUMask = "0002";
+    };
   };
+
+  system.activationScripts.aria2RpcSecret.text = ''
+    ${pkgs.coreutils}/bin/install -d -m 0750 -o root -g ${toString config.ids.gids.aria2} /var/lib/aria2
+    if [ ! -s /var/lib/aria2/rpc-secret ]; then
+      ${pkgs.openssl}/bin/openssl rand -base64 48 > /var/lib/aria2/rpc-secret
+    fi
+    ${pkgs.coreutils}/bin/chown root:${toString config.ids.gids.aria2} /var/lib/aria2/rpc-secret
+    ${pkgs.coreutils}/bin/chmod 0640 /var/lib/aria2/rpc-secret
+  '';
 }
