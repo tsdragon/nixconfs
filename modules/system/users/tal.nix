@@ -1,11 +1,14 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: let
   commonCifsOptions = [
+    "_netdev"
+    "noauto"
     "x-systemd.automount"
+    "x-systemd.requires=network-online.target"
+    "x-systemd.after=network-online.target"
     "x-systemd.idle-timeout=0"
     "credentials=${config.sops.templates."cifs_creds".path}"
     "uid=1000"
@@ -15,6 +18,10 @@
     "nofail"
   ];
 in {
+  imports = [
+    ../services/wallpaper-cache.nix
+  ];
+
   users.groups.plugdev = {};
   users.groups.urf = {gid = 1010;};
 
@@ -66,6 +73,13 @@ in {
     #  # Use the ++ operator to append to the list
     #  options = commonCifsOptions ++ [ "ro" ];
     #};
+  };
+
+  security.wrappers."mount.cifs" = {
+    source = "${pkgs.cifs-utils}/bin/mount.cifs";
+    owner = "root";
+    group = "root";
+    setuid = true;
   };
 
   # Enable passwordless sudo for user tal
