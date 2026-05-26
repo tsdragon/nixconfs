@@ -222,14 +222,11 @@ in {
       roonDesktop
     ];
 
-    home.file.".config/mimeapps.list".text = lib.mkAfter ''
-
-      [Added Associations]
-      x-scheme-handler/roon=roon-client.desktop;
-
-      [Default Applications]
-      x-scheme-handler/roon=roon-client.desktop;
-    '';
+    xdg.mimeApps = {
+      enable = true;
+      associations.added."x-scheme-handler/roon" = "roon-client.desktop";
+      defaultApplications."x-scheme-handler/roon" = "roon-client.desktop";
+    };
 
     systemd.user.services.roon-pipewire-loopback = {
       Unit = {
