@@ -7,6 +7,8 @@
   ...
 }: let
   sanctuaryPath = "/home/tal/Documents/sanctuary";
+  gooseVersion = "1.35.0";
+  gooseHash = "sha256-AsxgV7zvtY3tQxAfezVLEh9JWcPw/HiidtQPYYK+x2A=";
   mcpvault = pkgs.writeShellApplication {
     name = "mcpvault";
     runtimeInputs = [
@@ -37,12 +39,12 @@ in {
   };
 
   services.flatpak.packages = [
-    rec {
+    {
       appId = "io.github.block.Goose";
-      sha256 = "1jgpj8f4sbbdha81gpy26xkxjrcvf4fp2pq7c22kkkq147s35bb1";
+      sha256 = gooseHash;
       bundle = "${pkgs.fetchurl {
-        url = "https://github.com/aaif-goose/goose/releases/download/v1.34.1/io.github.block.Goose_stable_x86_64.flatpak";
-        inherit sha256;
+        url = "https://github.com/aaif-goose/goose/releases/download/v${gooseVersion}/io.github.block.Goose_stable_x86_64.flatpak";
+        hash = gooseHash;
       }}";
     }
   ];
