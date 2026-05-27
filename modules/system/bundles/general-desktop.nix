@@ -8,8 +8,11 @@
 
   services.vscode-server = {
     enable = true;
-    # VS Code tunnels install their server payload under ~/.vscode/cli/servers.
-    installPath = ["$HOME/.vscode-server" "$HOME/.vscode"];
+    installPath = [
+      "$HOME/.vscode-server"
+      "$HOME/.vscode"
+      "$HOME/.vscode/cli/servers"
+    ];
   };
 
   environment.systemPackages = with pkgs; [
