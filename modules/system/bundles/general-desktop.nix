@@ -12,8 +12,12 @@
       "$HOME/.vscode-server"
       "$HOME/.vscode"
       "$HOME/.vscode/cli/servers"
+      "$HOME/.vscode-server/cli/servers"
     ];
   };
+
+  # add nix ld beacuse code server tunnels break without it.
+  programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
     #vscode
