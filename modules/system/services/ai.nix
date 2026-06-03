@@ -60,7 +60,7 @@ in {
     enableLocalDB = true;
 
     env = {
-      HOST = "127.0.0.1";
+      HOST = "0.0.0.0";
       PORT = 3080;
       ALLOW_REGISTRATION = true;
     };
@@ -117,6 +117,8 @@ in {
       };
     };
   };
+
+  networking.firewall.allowedTCPPorts = [3080];
 
   services.mongodb.package = pkgs.mongodb-ce;
 
