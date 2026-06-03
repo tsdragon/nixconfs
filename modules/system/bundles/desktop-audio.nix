@@ -11,6 +11,21 @@
     '';
   };
 
+  # The SDDM greeter can start its own user PipeWire during login and race the
+  # real desktop session for USB DACs, leaving devices like the SMSL busy.
+  systemd.user = {
+    services = {
+      pipewire.unitConfig.ConditionUser = "!sddm";
+      pipewire-pulse.unitConfig.ConditionUser = "!sddm";
+      wireplumber.unitConfig.ConditionUser = "!sddm";
+    };
+
+    sockets = {
+      pipewire.unitConfig.ConditionUser = "!sddm";
+      pipewire-pulse.unitConfig.ConditionUser = "!sddm";
+    };
+  };
+
   # General-purpose low-latency PipeWire tuning that keeps several common rates available.
   services.pipewire.extraConfig.pipewire."10-desktop-audio" = {
     "context.properties" = {
