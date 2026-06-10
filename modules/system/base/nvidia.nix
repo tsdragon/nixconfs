@@ -1,19 +1,5 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
-  hardware.graphics = {
-    enable = true;
-    # VA-API shim for NVDEC/NVENC so browsers/media players can use the NVIDIA GPU.
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver
-      egl-wayland
-    ];
-    # Wayland EGL platform for 32-bit clients (e.g., Steam runtime) so they can talk to the driver.
-    extraPackages32 = with pkgs.pkgsi686Linux; [egl-wayland];
-  };
+{config, ...}: {
+  hardware.graphics.enable = true;
 
   services.xserver.videoDrivers = ["nvidia"];
 
