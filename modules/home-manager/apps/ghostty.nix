@@ -42,7 +42,8 @@
     };
   };
 
-  # Fix kde and dolphin terminal weirdness
+  # WORKAROUND(2026-06-10): KDE/Dolphin do not consistently discover Ghostty as
+  # the default terminal. Re-test after Plasma or Ghostty desktop entry updates.
   home.activation.kdeDefaultTerminal = lib.mkDefault (lib.hm.dag.entryAfter ["writeBoundary"] ''
     ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalApplication ghostty
     ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file kdeglobals --group General --key TerminalService com.mitchellh.ghostty.desktop

@@ -108,7 +108,8 @@ in {
 
           "privacy.trackingprotection.enabled" = true;
 
-          #fix dark mode after enabling tracking protection
+          # WORKAROUND(2026-06-10): Keep site dark-mode detection working with
+          # tracking protection.
           "privacy.resistFingerprinting" = false;
           "layout.css.prefers-color-scheme.content-override" = 0;
           "signon.rememberSignons" = false;

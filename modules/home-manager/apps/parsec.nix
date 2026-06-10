@@ -1,3 +1,7 @@
+# WORKAROUND(2026-06-10): Use both native and Flatpak versions of Parsec
+# because running two instances of the native version is not currenty
+# possible. Also rename entries (flatpak and native) to make them distinguishable
+# in the application menu.
 {pkgs, ...}: let
   parsecNativeDesktopFile = pkgs.writeText "parsecd.desktop" ''
     [Desktop Entry]

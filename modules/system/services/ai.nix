@@ -7,6 +7,8 @@
   sanctuaryPath = "/home/tal/Documents/sanctuary";
   gooseVersion = "1.35.0";
   gooseHash = "sha256-AsxgV7zvtY3tQxAfezVLEh9JWcPw/HiidtQPYYK+x2A=";
+  # WORKAROUND(2026-06-10): MCPVault is not packaged here, so run its pinned npm
+  # release through npx. Replace this with a Nix package when one is available.
   mcpvault = pkgs.writeShellApplication {
     name = "mcpvault";
     runtimeInputs = [
@@ -115,6 +117,9 @@ in {
     after = ["mongodb.service"];
     wants = ["mongodb.service"];
 
+    # WORKAROUND(2026-06-10): Override the module's home isolation and umask so
+    # LibreChat can share the user-owned directories. Re-test if the
+    # upstream module exposes supported options for bind paths and shared files.
     serviceConfig = {
       ProtectHome = lib.mkForce "tmpfs";
       BindPaths = [sanctuaryPath];

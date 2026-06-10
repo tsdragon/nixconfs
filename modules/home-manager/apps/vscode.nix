@@ -56,7 +56,8 @@ in {
     vscodeDisableUpdateChecks
   ];
 
-  # Mutate the user-owned VS Code settings file without making Home Manager own it.
+  # WORKAROUND(2026-06-10): Disable upstream update prompts without making Home
+  # Manager own and overwrite the user's otherwise mutable settings file.
   home.activation.vscodeDisableUpdateChecks = lib.hm.dag.entryAfter ["writeBoundary"] ''
     ${vscodeDisableUpdateChecks}/bin/vscode-disable-update-checks
   '';

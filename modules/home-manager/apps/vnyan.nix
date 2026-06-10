@@ -101,6 +101,8 @@ in {
     environment = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = {
+        # WORKAROUND(2026-06-10): Force Wine's legacy input path for Vnyan.
+        # Re-test raw input after Wine or Vnyan updates.
         WINE_DISABLE_RAWINPUT = "1";
       };
       description = "Environment variables exported when running Vnyan.";

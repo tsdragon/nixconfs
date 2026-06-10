@@ -86,6 +86,8 @@ in {
     setuid = true;
   };
 
+  # WORKAROUND(2026-06-10): network-online.target can be reached before the NAS
+  # responds, so gate the CIFS automounts on an explicit reachability check.
   systemd.services.tal-nas-online = {
     description = "Wait for Tal's NAS to be reachable";
     wants = ["network-online.target"];
@@ -111,6 +113,8 @@ in {
     '';
   };
 
+  # WORKAROUND(2026-06-10): Clear start-rate limiting so transient NAS/network
+  # failures do not permanently suppress later automount attempts.
   systemd.units = {
     "home-tal-nas-main.automount" = {
       overrideStrategy = "asDropin";

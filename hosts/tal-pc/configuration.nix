@@ -34,7 +34,9 @@
       efi.canTouchEfiVariables = true;
     };
 
-    # Prevent the iGPU (amdgpu) from binding DRM so only the NVIDIA dGPU drives displays.
+    # WORKAROUND(Permanent): Prevent amdgpu from binding DRM because this host
+    # is intended to expose only the NVIDIA dGPU to the display stack. While
+    # keeping amdgpu enabled for other purposes such as virtualization.
     blacklistedKernelModules = ["amdgpu"];
 
     initrd = {
@@ -48,8 +50,8 @@
       DefaultLimitNOFILE = "524288";
     };
 
-    # Plasma/Wayland can pass many DRM sync file descriptors between processes;
-    # avoid the low 1024 soft limit that showed up in the journal.
+    # WORKAROUND(2026-06-10): Plasma/Wayland can pass enough DRM sync file
+    # descriptors to exceed the default soft limit observed in the journal.
     user.extraConfig = ''
       DefaultLimitNOFILE=524288
     '';

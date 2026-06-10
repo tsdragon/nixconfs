@@ -11,7 +11,9 @@
     '';
   };
 
-  # Keep the login greeter from claiming audio devices before the desktop session.
+  # WORKAROUND(2026-06-10): The SDDM login greeter can race the desktop
+  # PipeWire session for USB audio devices. Re-test after login manager or
+  # PipeWire updates.
   systemd.user = {
     services = {
       pipewire.unitConfig.ConditionUser = "!plasmalogin";

@@ -15,7 +15,9 @@ in {
 
   xdg.portal = {
     enable = true;
-    # Force the KDE portal and keep GTK around for fallback-only cases.
+    # WORKAROUND(2026-06-10): Force KDE as the preferred portal while retaining
+    # GTK for applications that do not work correctly through the KDE backend.
+    # Re-test the fallback after major Plasma and portal updates.
     extraPortals = [
       pkgs.kdePackages.xdg-desktop-portal-kde
       pkgs.xdg-desktop-portal-gtk

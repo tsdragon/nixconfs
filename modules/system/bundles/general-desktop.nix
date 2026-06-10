@@ -6,11 +6,13 @@
 }: {
   hardware.bluetooth.enable = true;
 
-  # Clean NixOS fix for software that expects /bin/sh.
+  # WORKAROUND(2026-06-10): Provide /bin/sh for non-Nix-aware software that
+  # assumes an FHS filesystem.
   environment.binsh = "${pkgs.bashInteractive}/bin/bash";
 
-  # VS Code server/tunnel compatibility on NixOS.
-  # VS Code downloads prebuilt server binaries, and nix-ld makes those run on NixOS.
+  # WORKAROUND(2026-06-10): VS Code downloads prebuilt server binaries that
+  # require an FHS-like dynamic loader. Re-test if VS Code gains native NixOS
+  # server support.
   programs.nix-ld.enable = true;
 
   services.vscode-server = {
@@ -36,7 +38,8 @@
       Restart = "always";
       RestartSec = 10;
 
-      # Make sure `env sh` works inside the service environment.
+      # WORKAROUND(2026-06-10): The downloaded VS Code server invokes `env sh`;
+      # keep /bin visible until the server no longer assumes an FHS layout.
       Environment = "PATH=/run/current-system/sw/bin:/bin";
     };
   };

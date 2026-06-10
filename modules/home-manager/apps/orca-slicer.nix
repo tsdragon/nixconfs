@@ -1,5 +1,6 @@
-# 20251130 - Wrap Orca Slicer with nix-alien to fix missing library issues.
-# without it the prep viewer will be blank.
+# WORKAROUND(2026-06-10): Run Orca Slicer through nix-alien because the normal
+# package has missing runtime libraries and renders a blank prepare view.
+# Re-test the unwrapped package after nixpkgs Orca Slicer updates.
 {
   pkgs,
   inputs,

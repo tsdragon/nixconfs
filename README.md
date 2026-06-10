@@ -43,3 +43,16 @@ Evaluate checks without building:
 ```bash
 nix flake check --no-build
 ```
+
+## Workaround Tracking
+
+Temporary fixes and compatibility shims use `WORKAROUND(YYYY-MM-DD)`, where
+the date is the last review date. Find everything due for periodic re-testing
+with:
+
+```bash
+rg -n 'WORKAROUND\(' --glob '*.nix'
+```
+
+When reviewing a marker, remove the workaround if it is no longer needed or
+update the date after confirming that the underlying issue still exists.

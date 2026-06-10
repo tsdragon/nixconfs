@@ -60,6 +60,8 @@
     exec ${cfg.winePackage}/bin/wine "$exe_path" "$@"
   '';
 
+  # WORKAROUND(2026-06-10): Wine installs Roon's icon under a generated name;
+  # copy it to the stable icon name used by the declarative desktop entry.
   syncRoonIcons = ''
     target_name=${lib.escapeShellArg "${cfg.icon}.png"}
     for source_icon in ${lib.escapeShellArg "${config.home.homeDirectory}/.local/share/icons/hicolor"}/*x*/apps/718A_Roon.0.png; do
@@ -71,6 +73,8 @@
     done
   '';
 
+  # WORKAROUND(2026-06-10): Remove Wine-generated Roon launchers that duplicate
+  # the declarative desktop entry and can point at stale install paths.
   pruneWineDesktopEntries = ''
     ${pkgs.coreutils}/bin/rm -f \
       ${lib.escapeShellArg "${config.home.homeDirectory}/.local/share/applications/wine/Programs/Roon.desktop"} \
@@ -147,6 +151,8 @@ in {
       description = "Wine package used to run the Windows Roon client.";
     };
 
+    # WORKAROUND(2026-06-10): Bypass Nix's Wine wrapper because it confuses
+    # winetricks architecture detection. Re-test after Wine/winetricks updates.
     wineBinaryForWinetricks = lib.mkOption {
       type = lib.types.str;
       default = "${cfg.winePackage}/bin/.wine";

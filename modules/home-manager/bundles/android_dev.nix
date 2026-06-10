@@ -5,7 +5,8 @@
   ...
 }: let
   androidPkgs = pkgs.androidenv.androidPkgs;
-  # Use a writable SDK path so Gradle can install missing components.
+  # WORKAROUND(2026-06-10): Use a writable SDK because Gradle expects to install
+  # missing components in place, which the immutable Nix SDK does not permit.
   useNixSdk = false;
   hasSdk = androidPkgs ? androidsdk;
   sdkRoot =
