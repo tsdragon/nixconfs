@@ -9,22 +9,7 @@
   ];
 in {
   services = {
-    displayManager = {
-      defaultSession = "plasma";
-      sddm.enable = true;
-    };
-
-    # SDDM's Wayland greeter is still experimental and this host is hitting its
-    # "Session started false" path, which tears down a healthy Plasma session.
-    #greetd = {
-    #  enable = true;
-    #  useTextGreeter = true;
-    #  settings.default_session = {
-    #    command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --cmd ${lib.escapeShellArg plasmaWayland}";
-    #    user = "greeter";
-    #  };
-    #};
-
+    displayManager.plasma-login-manager.enable = true;
     desktopManager.plasma6.enable = true;
   };
 
