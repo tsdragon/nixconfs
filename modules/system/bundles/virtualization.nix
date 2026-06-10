@@ -1,8 +1,4 @@
-{
-  pkgs,
-  pkgsUnstable,
-  ...
-}: {
+{pkgs, ...}: {
   security.polkit.enable = true;
 
   virtualisation = {
@@ -26,7 +22,7 @@
   };
 
   environment.systemPackages = [
-    pkgsUnstable.cockpit-machines
+    pkgs.cockpit-machines
     pkgs.libvirt-dbus
   ];
 

@@ -27,8 +27,8 @@
   # Replace "tal-nixos" if you want a different tunnel name.
   systemd.user.services.vscode-tunnel = {
     description = "VS Code Tunnel";
-    wantedBy = [ "default.target" ];
-    after = [ "network-online.target" ];
+    wantedBy = ["default.target"];
+    after = ["network-online.target"];
 
     serviceConfig = {
       Type = "simple";
@@ -80,7 +80,7 @@
   fonts.enableDefaultPackages = true;
   fonts.fontconfig = {
     defaultFonts = {
-      monospace = [ "JetBrainsMono Nerd Font Mono" ];
+      monospace = ["JetBrainsMono Nerd Font Mono"];
     };
   };
 }

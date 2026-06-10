@@ -2,7 +2,7 @@
   description = "Tal's NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
@@ -10,7 +10,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -42,7 +42,7 @@
         inherit system;
         config.allowUnfree = true;
       };
-    # Enable unstable pkgs for use with certain apps
+    # Enable unstable packages for modules that explicitly opt into them.
     pkgsUnstableFor = system:
       import inputs.nixpkgs-unstable {
         inherit system;

@@ -46,6 +46,7 @@
 in {
   programs.firefox = {
     enable = true;
+    configPath = ".mozilla/firefox";
     profiles = {
       ${config.home.username} = {
         isDefault = true;
@@ -75,7 +76,7 @@ in {
                   }
                   {
                     name = "channel";
-                    value = "25.11";
+                    value = "26.05";
                   }
                   {
                     name = "query";

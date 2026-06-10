@@ -143,7 +143,7 @@ in {
 
     winePackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.wineWowPackages.stagingFull;
+      default = pkgs.wineWow64Packages.stagingFull;
       description = "Wine package used to run the Windows Roon client.";
     };
 

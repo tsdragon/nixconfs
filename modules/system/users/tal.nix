@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -79,7 +80,7 @@ in {
   };
 
   security.wrappers."mount.cifs" = {
-    source = "${pkgs.cifs-utils}/bin/mount.cifs";
+    source = lib.getExe' pkgs.cifs-utils "mount.cifs";
     owner = "root";
     group = "root";
     setuid = true;

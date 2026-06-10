@@ -1,9 +1,7 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
-  pkgsUnstable,
   ...
 }: let
   sanctuaryPath = "/home/tal/Documents/sanctuary";
@@ -13,7 +11,7 @@
     name = "mcpvault";
     runtimeInputs = [
       pkgs.bash
-      pkgsUnstable.nodejs_24
+      pkgs.nodejs_24
     ];
     text = ''
       export NPM_CONFIG_CACHE="''${NPM_CONFIG_CACHE:-/var/lib/librechat/npm-cache}"
@@ -22,14 +20,6 @@
     '';
   };
 in {
-  disabledModules = [
-    "services/web-apps/librechat.nix"
-  ];
-
-  imports = [
-    "${inputs.nixpkgs-unstable}/nixos/modules/services/web-apps/librechat.nix"
-  ];
-
   sops.secrets = {
     "librechat-creds-key" = {};
     "librechat-creds-iv" = {};
@@ -56,7 +46,6 @@ in {
 
   services.librechat = {
     enable = true;
-    package = pkgsUnstable.librechat;
     enableLocalDB = true;
 
     env = {
@@ -97,7 +86,7 @@ in {
           type = "stdio";
           title = "Sanctuary Filesystem";
           description = "Read and write files under the sanctuary directory.";
-          command = lib.getExe pkgsUnstable.mcp-server-filesystem;
+          command = lib.getExe pkgs.mcp-server-filesystem;
           args = [sanctuaryPath];
           serverInstructions = "Only access files under ${sanctuaryPath}.";
         };

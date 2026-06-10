@@ -1,10 +1,6 @@
-{
-  pkgs,
-  pkgsUnstable,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
-    pkgsUnstable.exactaudiocopy
+    exactaudiocopy
     flac
     lame
     mktorrent

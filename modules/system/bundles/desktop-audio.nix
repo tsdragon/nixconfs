@@ -11,18 +11,17 @@
     '';
   };
 
-  # The SDDM greeter can start its own user PipeWire during login and race the
-  # real desktop session for USB DACs, leaving devices like the SMSL busy.
+  # Keep the login greeter from claiming audio devices before the desktop session.
   systemd.user = {
     services = {
-      pipewire.unitConfig.ConditionUser = "!sddm";
-      pipewire-pulse.unitConfig.ConditionUser = "!sddm";
-      wireplumber.unitConfig.ConditionUser = "!sddm";
+      pipewire.unitConfig.ConditionUser = "!plasmalogin";
+      pipewire-pulse.unitConfig.ConditionUser = "!plasmalogin";
+      wireplumber.unitConfig.ConditionUser = "!plasmalogin";
     };
 
     sockets = {
-      pipewire.unitConfig.ConditionUser = "!sddm";
-      pipewire-pulse.unitConfig.ConditionUser = "!sddm";
+      pipewire.unitConfig.ConditionUser = "!plasmalogin";
+      pipewire-pulse.unitConfig.ConditionUser = "!plasmalogin";
     };
   };
 

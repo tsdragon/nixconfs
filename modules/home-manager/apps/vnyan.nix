@@ -70,7 +70,7 @@ in {
 
     winePackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.wineWowPackages.staging;
+      default = pkgs.wineWow64Packages.staging;
       description = "Wine package used to run Vnyan.";
     };
 

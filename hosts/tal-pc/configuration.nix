@@ -62,7 +62,6 @@
 
   programs = {
     winbox.enable = true;
-    adb.enable = true;
   };
 
   services = {
@@ -92,7 +91,7 @@
     android-tools
     yubioath-flutter
     qpwgraph
-    helvum
+    crosspipe
     carla
     easyeffects
     lsp-plugins
