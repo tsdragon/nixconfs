@@ -4,8 +4,6 @@
   lib,
   ...
 }: {
-  hardware.bluetooth.enable = true;
-
   # WORKAROUND(2026-06-10): Provide /bin/sh for non-Nix-aware software that
   # assumes an FHS filesystem.
   environment.binsh = "${pkgs.bashInteractive}/bin/bash";
@@ -20,8 +18,6 @@
     installPath = [
       "$HOME/.vscode-server"
       "$HOME/.vscode"
-      "$HOME/.vscode/cli/servers"
-      "$HOME/.vscode-server/cli/servers"
     ];
   };
 

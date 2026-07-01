@@ -60,6 +60,10 @@
   hardware = {
     enableRedistributableFirmware = true;
     cpu.amd.updateMicrocode = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
   };
 
   programs = {
