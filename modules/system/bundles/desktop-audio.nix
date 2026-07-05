@@ -27,10 +27,11 @@
     };
   };
 
-  # General-purpose low-latency PipeWire tuning that keeps several common rates available.
+  # Keep desktop/voice capture on the WebRTC-friendly default while still
+  # allowing music/audio-production clients to request higher rates.
   services.pipewire.extraConfig.pipewire."10-desktop-audio" = {
     "context.properties" = {
-      "default.clock.rate" = 96000;
+      "default.clock.rate" = 48000;
       "default.clock.allowed-rates" = [32000 44100 48000 88200 96000];
       "default.clock.quantum" = 128;
       "default.clock.min-quantum" = 64;
