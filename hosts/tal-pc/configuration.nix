@@ -103,6 +103,7 @@
     lsp-plugins
     x42-plugins
     zam-plugins
+    solaar
   ];
 
   # This value determines the NixOS release from which the default
