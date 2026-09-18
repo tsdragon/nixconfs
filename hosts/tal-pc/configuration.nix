@@ -104,6 +104,7 @@
     x42-plugins
     zam-plugins
     solaar
+    calibre
   ];
 
   # This value determines the NixOS release from which the default
