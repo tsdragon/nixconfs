@@ -19,6 +19,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        # Zen tracks recent Firefox releases, so keep it on unstable nixpkgs.
+        nixpkgs.follows = "nixpkgs-unstable";
+        home-manager.follows = "home-manager";
+      };
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +42,7 @@
     nix-flatpak,
     home-manager,
     firefox-addons,
+    zen-browser,
     sops-nix,
     ...
   } @ inputs: let
