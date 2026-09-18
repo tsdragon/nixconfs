@@ -18,6 +18,10 @@
     mime.enable = true;
     systemDirs.data = ["${config.home.homeDirectory}/.nix-profile/share/applications"];
 
+    # Browsers and desktop tools may replace this generated file with a
+    # regular file, so let Home Manager reclaim it on the next activation.
+    configFile."mimeapps.list".force = true;
+
     mimeApps = {
       enable = true;
       associations.added = {
