@@ -9,10 +9,12 @@
   firefoxAddons = (inputs.firefox-addons.overlays.default pkgs pkgs)."firefox-addons";
 
   secrets = import ../../../secrets/location.nix;
+  zenProfilesPath = "zen";
 in {
   programs.zen-browser = {
     enable = true;
-    setAsDefaultBrowser = false;
+    setAsDefaultBrowser = true;
+    profilesPath = zenProfilesPath;
 
     profiles = {
       ${config.home.username} = {
@@ -89,4 +91,8 @@ in {
       };
     };
   };
+
+  # Zen rewrites profiles.ini during normal use, so force only this generated
+  # file back to the Home Manager version on activation.
+  home.file."${config.xdg.configHome}/${zenProfilesPath}/profiles.ini".force = true;
 }

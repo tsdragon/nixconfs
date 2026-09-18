@@ -6,6 +6,7 @@
   ...
 }: {
   imports = [
+    inputs.zen-browser.homeModules.beta
     ../../modules/home-manager/base/default.nix
     ../../modules/home-manager/base/identity.nix
     ../../modules/home-manager/bundles/3d.nix
@@ -17,6 +18,7 @@
     ../../modules/home-manager/themes/kvantum_themes.nix
     ../../modules/home-manager/apps/zsh.nix
     ../../modules/home-manager/apps/firefox.nix
+    ../../modules/home-manager/apps/zen-browser.nix
     ../../modules/home-manager/apps/kitty.nix
     ../../modules/home-manager/apps/ghostty.nix
     ../../modules/home-manager/apps/parsec.nix
