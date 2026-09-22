@@ -1,0 +1,16 @@
+# Extra spellings from Sanctuary's core rules and Cypher System terminology.
+# Note names and frontmatter aliases are also loaded automatically at runtime.
+Sanctuary
+Hallow
+Cypher System
+cyphers
+First-Tech
+Nox
+homunculi
+nanites
+The Touched
+The Children
+Sanctuary Protocol
+Sanctuary Aegis
+Resonance Burst
+OI-1776 b

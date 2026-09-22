@@ -5,6 +5,14 @@
   ...
 }: let
   sanctuaryPath = "/home/tal/Documents/sanctuary";
+  sttPython = pkgs.python3.withPackages (ps: [ps.pyyaml]);
+  sanctuaryStt = pkgs.writeShellApplication {
+    name = "sanctuary-stt";
+    runtimeInputs = [sttPython pkgs.ffmpeg-headless];
+    text = ''
+      exec python3 ${./sanctuary-stt/server.py} "$@"
+    '';
+  };
   gooseVersion = "1.35.0";
   gooseHash = "sha256-AsxgV7zvtY3tQxAfezVLEh9JWcPw/HiidtQPYYK+x2A=";
   # WORKAROUND(2026-06-10): MCPVault is not packaged here, so run its pinned npm
@@ -49,6 +57,9 @@ in {
   services.librechat = {
     enable = true;
     enableLocalDB = true;
+    # Stdio MCP servers inherit this identity when creating sanctuary files.
+    user = "tal";
+    group = "users";
 
     env = {
       HOST = "0.0.0.0";
@@ -66,6 +77,23 @@ in {
 
     settings = {
       version = "1.2.1";
+
+      speech = {
+        stt.openai = {
+          url = "http://127.0.0.1:3081/v1/audio/transcriptions";
+          apiKey = "\${OPENROUTER_KEY}";
+          model = "microsoft/mai-transcribe-2";
+        };
+        speechTab = {
+          conversationMode = false;
+          speechToText = {
+            engineSTT = "openai";
+            languageSTT = "English (US)";
+            autoTranscribeAudio = false;
+            autoSendText = -1;
+          };
+        };
+      };
 
       endpoints.custom = [
         {
@@ -114,8 +142,8 @@ in {
   services.mongodb.package = pkgs.mongodb-ce;
 
   systemd.services.librechat = {
-    after = ["mongodb.service"];
-    wants = ["mongodb.service"];
+    after = ["mongodb.service" "sanctuary-stt.service"];
+    wants = ["mongodb.service" "sanctuary-stt.service"];
 
     # WORKAROUND(2026-06-10): Override the module's home isolation and umask so
     # LibreChat can share the user-owned directories. Re-test if the
@@ -128,15 +156,44 @@ in {
     };
   };
 
+  systemd.services.sanctuary-stt = {
+    description = "Sanctuary vocabulary for LibreChat transcription via OpenRouter";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+    environment = {
+      SANCTUARY_PATH = sanctuaryPath;
+      STT_TERMS_FILE = "${./sanctuary-stt/terms.txt}";
+      SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+    };
+    serviceConfig = {
+      ExecStart = lib.getExe sanctuaryStt;
+      User = "tal";
+      Group = "users";
+      LoadCredential = "openrouter-key:${config.sops.secrets."librechat-openrouter-key".path}";
+      Restart = "on-failure";
+      RestartSec = 5;
+      UMask = "0077";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      PrivateDevices = true;
+      ProtectSystem = "strict";
+      ProtectHome = "tmpfs";
+      BindReadOnlyPaths = [sanctuaryPath];
+      RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+      MemoryMax = "512M";
+    };
+  };
+
   systemd.tmpfiles.rules = [
     "d ${sanctuaryPath} 2775 tal users - -"
-    "d /var/lib/librechat/logs 0750 librechat librechat - -"
-    "d /var/lib/librechat/uploads 0750 librechat librechat - -"
-    "d /var/lib/librechat/images 0750 librechat librechat - -"
-    "d /var/lib/librechat/npm-cache 0750 librechat librechat - -"
-    "Z /var/lib/librechat/logs 0750 librechat librechat - -"
-    "Z /var/lib/librechat/uploads 0750 librechat librechat - -"
-    "Z /var/lib/librechat/images 0750 librechat librechat - -"
-    "A+ ${sanctuaryPath} - - - - u:librechat:rwX,g::rwX,m::rwX,d:u:librechat:rwX,d:g::rwX,d:m::rwX"
+    "d /var/lib/librechat/logs 0750 tal users - -"
+    "d /var/lib/librechat/uploads 0750 tal users - -"
+    "d /var/lib/librechat/images 0750 tal users - -"
+    "d /var/lib/librechat/npm-cache 0750 tal users - -"
+    "Z /var/lib/librechat/logs 0750 tal users - -"
+    "Z /var/lib/librechat/uploads 0750 tal users - -"
+    "Z /var/lib/librechat/images 0750 tal users - -"
+    "Z /var/lib/librechat/npm-cache - tal users - -"
   ];
 }
