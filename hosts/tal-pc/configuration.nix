@@ -17,10 +17,10 @@
 
   networking.hostName = "tal-pc";
 
-  services.roon-bridge = {
-    enable = true;
-    openFirewall = true;
-  };
+  #services.roon-bridge = {
+  #  enable = true;
+  #  openFirewall = true;
+  #};
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;

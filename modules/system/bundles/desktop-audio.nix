@@ -4,12 +4,12 @@
   lib,
   ...
 }: {
-  boot = {
-    kernelModules = ["snd-aloop"];
-    extraModprobeConfig = ''
-      options snd-aloop id=RoonPipeWire index=8 enable=1 pcm_substreams=1 pcm_notify=1
-    '';
-  };
+  #boot = {
+  #  kernelModules = ["snd-aloop"];
+  #  extraModprobeConfig = ''
+  #    options snd-aloop id=RoonPipeWire index=8 enable=1 pcm_substreams=1 pcm_notify=1
+  #  '';
+  #};
 
   # WORKAROUND(2026-06-10): The SDDM login greeter can race the desktop
   # PipeWire session for USB audio devices. Re-test after login manager or

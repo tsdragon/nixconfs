@@ -23,7 +23,7 @@
     ../../modules/home-manager/apps/ghostty.nix
     ../../modules/home-manager/apps/parsec.nix
     ../../modules/home-manager/apps/postybirb.nix
-    ../../modules/home-manager/apps/roon.nix
+    #../../modules/home-manager/apps/roon.nix
     ../../modules/home-manager/apps/git.nix
     ../../modules/home-manager/bundles/streaming.nix
     #../../modules/home-manager/apps/vnyan.nix
@@ -38,7 +38,7 @@
 
   programs = {
     home-manager.enable = true;
-    roon-client.enable = true;
+    #roon-client.enable = true;
     #vnyan.enable = true;
   };
 
