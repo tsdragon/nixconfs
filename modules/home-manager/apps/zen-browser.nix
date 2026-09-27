@@ -15,6 +15,17 @@ in {
     enable = true;
     setAsDefaultBrowser = true;
     profilesPath = zenProfilesPath;
+    # Clear temporary caches on exit while keeping history and login state.
+    policies.SanitizeOnShutdown = {
+      Cache = true;
+      Cookies = false;
+      History = false;
+      FormData = false;
+      Sessions = false;
+      SiteSettings = false;
+      OfflineApps = false;
+      Locked = false;
+    };
 
     profiles = {
       ${config.home.username} = {

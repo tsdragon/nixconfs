@@ -47,6 +47,18 @@ in {
   programs.firefox = {
     enable = true;
     configPath = ".mozilla/firefox";
+    # Clear temporary caches on exit while keeping history and login state.
+    policies.SanitizeOnShutdown = {
+      Cache = true;
+      Cookies = false;
+      History = false;
+      FormData = false;
+      Sessions = false;
+      SiteSettings = false;
+      OfflineApps = false;
+      Locked = false;
+    };
+
     profiles = {
       ${config.home.username} = {
         isDefault = true;
