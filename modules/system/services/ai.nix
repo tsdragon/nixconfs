@@ -31,11 +31,11 @@
   };
 in {
   sops.secrets = {
-    "librechat-creds-key" = {};
-    "librechat-creds-iv" = {};
-    "librechat-jwt-secret" = {};
-    "librechat-jwt-refresh-secret" = {};
-    "librechat-openrouter-key" = {};
+    "librechat-creds-key".restartUnits = ["librechat.service"];
+    "librechat-creds-iv".restartUnits = ["librechat.service"];
+    "librechat-jwt-secret".restartUnits = ["librechat.service"];
+    "librechat-jwt-refresh-secret".restartUnits = ["librechat.service"];
+    "librechat-openrouter-key".restartUnits = ["librechat.service" "sanctuary-stt.service"];
   };
 
   services.flatpak.packages = [
@@ -57,14 +57,16 @@ in {
   services.librechat = {
     enable = true;
     enableLocalDB = true;
+    openFirewall = false;
     # Stdio MCP servers inherit this identity when creating sanctuary files.
     user = "tal";
     group = "users";
 
     env = {
-      HOST = "0.0.0.0";
+      HOST = "127.0.0.1";
       PORT = 3080;
-      ALLOW_REGISTRATION = true;
+      ALLOW_REGISTRATION = false;
+      ALLOW_SOCIAL_REGISTRATION = false;
     };
 
     credentials = {
@@ -136,8 +138,6 @@ in {
       };
     };
   };
-
-  networking.firewall.allowedTCPPorts = [3080];
 
   services.mongodb.package = pkgs.mongodb-ce;
 
