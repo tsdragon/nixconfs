@@ -20,6 +20,15 @@ speech to text and select the external/OpenAI engine rather than Browser.
 The exact label depends on the client version. This uses your server's
 OpenRouter configuration; it does not need a separate OpenAI key.
 
+LibreChat listens only on localhost, and new account registration is disabled.
+For access from another device, forward the port through SSH:
+
+```sh
+ssh -N -L 127.0.0.1:3080:127.0.0.1:3080 tal@tal-pc
+```
+
+Then open `http://localhost:3080` on that device while the tunnel is running.
+
 Click the microphone (or Ctrl+Alt+L), speak, and stop recording. Review the
 transcription in the composer before sending. Auto-send is disabled by default;
 existing browser preferences may need changing once. Microphone access requires
@@ -48,6 +57,8 @@ The NixOS definition is in `../ai.nix`. It reuses the existing SOPS OpenRouter
 credential via systemd `LoadCredential`, gives the adapter read-only vault access,
 and starts it alongside LibreChat. Audio conversion files are removed after each
 request. The adapter does not log audio, transcripts, names, or credentials.
+SOPS restarts LibreChat when its credentials change and also restarts the adapter
+when the shared OpenRouter key changes.
 
 Recordings are limited to 25 MiB per upload and 25 minutes. Use compressed audio
 (such as MP3 or M4A) to stay within the upload limit. Internal chunking avoids
