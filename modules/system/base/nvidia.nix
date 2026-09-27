@@ -1,4 +1,9 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   hardware.graphics.enable = true;
 
   services.xserver.videoDrivers = ["nvidia"];
@@ -26,6 +31,29 @@
     nvidiaSettings = true;
 
     # Prefer the long-lived branch for fewer regressions.
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    package = let
+      driver = config.boot.kernelPackages.nvidiaPackages.production;
+    in
+      # WORKAROUND(2026-09-26): 595.71.05 needs the Linux 7.2 strncpy and DRM
+      # compatibility fixes. Remove when production includes them.
+      driver.overrideAttrs (old: {
+        passthru =
+          old.passthru
+          // {
+            mod = driver.mod.overrideAttrs (oldMod:
+              lib.optionalAttrs (driver.version == "595.71.05" && lib.versionAtLeast config.boot.kernelPackages.kernel.version "7.2") {
+                patches =
+                  (oldMod.patches or [])
+                  ++ [
+                    (pkgs.fetchurl {
+                      url = "https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/94bcd86886298f7798837a38dc1ff361d60a9c8d/nvidia/nvidia-utils/0001-make-Add-support-for-7.2-Kernel.patch";
+                      hash = "sha256-hdklzeaY0s/0RME+CtQoddwOuTkSh+/jNdDD6t7cC48=";
+                    })
+                  ];
+                # The patch targets kernel-open/; this source starts below it.
+                patchFlags = ["-p2"];
+              });
+          };
+      });
   };
 }
