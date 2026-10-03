@@ -92,7 +92,26 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    rpi-imager
+    # WORKAROUND(2026-09-30): 2.0.9 uses Material attached properties without
+    # importing them, preventing the wizard from loading. Drop postPatch once fixed.
+    # https://github.com/NixOS/nixpkgs/issues/529793
+    (rpi-imager.overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace src/wizard/WritingStep.qml \
+          --replace-fail 'import QtQuick.Controls' 'import QtQuick.Controls
+        import QtQuick.Controls.Material'
+      '';
+      postInstall = (old.postInstall or "") + ''
+        # Use the upstream GUI elevation policy, scoped to this store binary.
+        install -Dm644 ../../debian/com.raspberrypi.rpi-imager.policy \
+          "$out/share/polkit-1/actions/com.raspberrypi.rpi-imager.policy"
+        substituteInPlace "$out/share/polkit-1/actions/com.raspberrypi.rpi-imager.policy" \
+          --replace-fail '/usr/bin/rpi-imager' "$out/bin/rpi-imager" \
+          --replace-fail 'auth_admin_keep' 'auth_admin'
+        substituteInPlace "$out/share/applications/com.raspberrypi.rpi-imager.desktop" \
+          --replace-fail 'Exec=rpi-imager %u' "Exec=/run/wrappers/bin/pkexec $out/bin/rpi-imager %u"
+      '';
+    }))
     cifs-utils
     android-tools
     yubioath-flutter
