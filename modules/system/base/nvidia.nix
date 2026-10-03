@@ -20,13 +20,11 @@
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
     powerManagement.finegrained = false;
 
-    # WORKAROUND(2026-06-10): The open kernel module has been unreliable with
-    # KWin atomic modesets. Re-test it after major NVIDIA or Plasma updates.
     # Support for open driver is limited to the Turing and later architectures. Full list of
     # supported GPUs is at:
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
-    open = false;
+    open = true;
 
     nvidiaSettings = true;
 
