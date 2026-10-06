@@ -1,12 +1,13 @@
 # Sanctuary speech in LibreChat
 
 LibreChat's microphone sends audio to a loopback-only adapter on port 3081.
-The adapter converts audio to FLAC in pieces of up to three minutes and calls
+The adapter converts audio to FLAC and calls
 `microsoft/mai-transcribe-2` on OpenRouter with
 `provider.options.azure.phraseList.phrases`. There is one transcription model;
 no text rewriting model or second inference step is used.
-Long recordings are split near quiet points, transcribed in order with the same
-Sanctuary terms, and joined into one text attachment. You upload one file.
+It first tries the whole recording when its compressed size fits the API limit.
+If splitting is needed, chunks are transcribed in order with the same Sanctuary
+terms and joined into one text attachment. You upload one file.
 
 The adapter exists because LibreChat 0.8.6's STT provider only sends `file`,
 `model`, and `language`. Its speech YAML cannot supply MAI's provider options.
@@ -57,15 +58,39 @@ The NixOS definition is in `../ai.nix`. It reuses the existing SOPS OpenRouter
 credential via systemd `LoadCredential`, gives the adapter read-only vault access,
 and starts it alongside LibreChat. Audio conversion files are removed after each
 request. The adapter does not log audio, transcripts, names, or credentials.
+FLAC encoding uses a temporary seekable file so ffmpeg finalizes the duration
+metadata. Streaming FLAC directly to a pipe left that metadata empty and caused
+MAI provider HTTP 500 errors, including on short clips.
+The service has a 1 GiB memory cap to accommodate larger multipart uploads and
+30-minute PCM conversion; a full-duration noisy WAV test peaked around 690 MiB.
 SOPS restarts LibreChat when its credentials change and also restarts the adapter
 when the shared OpenRouter key changes.
 
-Recordings are limited to 25 MiB per upload and 25 minutes. Use compressed audio
-(such as MP3 or M4A) to stay within the upload limit. Internal chunking avoids
-OpenRouter's large-input rejection and reduces the risk of its 60-second
-upstream processing timeout. Processing a long recording can take several minutes.
-Transient OpenRouter 429/502/503/504 errors get two retries, with the vocabulary
-preserved on every attempt. Provider throttling can still cause a request to fail.
+Recordings may be up to **30 minutes** and **64 MiB** (with an extra MiB allowed
+for multipart framing). Use MP3 or M4A for larger recordings. LibreChat's current
+default upload limit is already above this adapter limit.
+
+Chunk sizes adapt to the recording and provider instead of using a fixed duration.
+Each FLAC must be at most 18,000,000 bytes, leaving room for base64 and JSON under
+OpenRouter's 25 MB inline request cap. Oversized audio is split locally before
+sending. Provider large-input rejections and processing timeouts halve the chunk
+duration; later chunks use the reduced limit. Splitting stops at 30 seconds and
+returns an error if the provider still fails, rather than returning a partial
+transcript. OpenRouter's upstream processing timeout is 60 seconds per request,
+so there is no single maximum chunk duration that works for every recording.
+
+Cuts prefer the latest 300 ms pause within the final 30 seconds of a chunk.
+If there is no pause, they use the quietest window. Every decoded sample is kept
+exactly once, without overlapping speech. Cuts also avoid leaving tiny final
+fragments with too little speech context. This reduces mid-word cuts, but cannot
+guarantee clean boundaries in continuous speech or noisy recordings.
+
+Processing a long recording can take several minutes. Transient OpenRouter
+429/502/503 errors get two retries; size and timeout failures use smaller chunks.
+If 502/503 persists after those retries, the adapter also reduces the chunk size,
+because OpenRouter can wrap provider large-input failures in gateway errors.
+The vocabulary is preserved on every attempt. Provider throttling can still
+cause a request to fail.
 
 ```sh
 curl http://127.0.0.1:3081/health
@@ -81,6 +106,16 @@ so Nix includes them when rebuilding:
 
 ```sh
 sudo nixos-rebuild switch --flake path:/home/tal/.config/nixconfs#tal-pc
+```
+
+If the service was updated immediately using the temporary
+`30-minute-audio.conf` systemd override, it lasts until reboot. After a successful
+rebuild, remove that override so subsequent declarative updates take effect:
+
+```sh
+sudo rm -f /run/systemd/system/sanctuary-stt.service.d/30-minute-audio.conf
+sudo systemctl daemon-reload
+sudo systemctl restart sanctuary-stt.service
 ```
 
 References: [MAI-Transcribe 2](https://openrouter.ai/microsoft/mai-transcribe-2),

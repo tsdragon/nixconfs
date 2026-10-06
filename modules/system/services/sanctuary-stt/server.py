@@ -23,9 +23,12 @@ import yaml
 
 MODEL = "microsoft/mai-transcribe-2"
 UPSTREAM = "https://openrouter.ai/api/v1/audio/transcriptions"
-MAX_UPLOAD = 25 * 1024 * 1024
-MAX_SECONDS = 25 * 60
-CHUNK_SECONDS = 3 * 60
+MAX_FILE_BYTES = 64 * 1024 * 1024
+MAX_UPLOAD = MAX_FILE_BYTES + 1024 * 1024  # Allow multipart framing.
+MAX_SECONDS = 30 * 60
+# Below OpenRouter's 25 MB inline limit, including base64 and JSON overhead.
+MAX_UPSTREAM_AUDIO = 18_000_000
+MIN_CHUNK_SECONDS = 30
 PCM_BYTES_PER_SECOND = 16000 * 2
 # Keep a focused list: larger lists returned provider 400 in live tests.
 MAX_PHRASES = 50
@@ -100,6 +103,8 @@ def parse_upload(content_type, body):
             fields[name] = part.get_payload(decode=True)
     if not fields.get("file"):
         raise ValueError("An audio file is required.")
+    if len(fields["file"]) > MAX_FILE_BYTES:
+        raise OverflowError("Audio file exceeds 64 MiB.")
     if fields.get("model", MODEL.encode()).decode() != MODEL:
         raise ValueError(f"Only {MODEL} is supported.")
     language = fields.get("language", b"").decode()
@@ -108,23 +113,31 @@ def parse_upload(content_type, body):
     return fields["file"], language.split("-")[0]
 
 
-def pcm_chunks(pcm):
-    """Split without dropping samples, preferring a quiet point near each boundary."""
-    size = CHUNK_SECONDS * PCM_BYTES_PER_SECOND
+def pcm_chunks(pcm, max_seconds=MAX_SECONDS):
+    """Keep every sample; prefer the latest pause before the requested limit."""
+    limit = int(max_seconds * PCM_BYTES_PER_SECOND) // 2 * 2
     while pcm:
-        if len(pcm) <= size:
+        if len(pcm) <= limit:
             yield pcm
             return
-        # Find the quietest 100 ms within the last five seconds of the chunk.
-        # This reduces cuts through words without overlapping/duplicating speech.
-        start = size - min(5 * PCM_BYTES_PER_SECOND, size // 2)
-        window = PCM_BYTES_PER_SECOND // 10
+        # Avoid leaving a tiny final fragment with too little speech context.
+        minimum_tail = min(MIN_CHUNK_SECONDS * PCM_BYTES_PER_SECOND, limit // 2) // 2 * 2
+        size = min(limit, len(pcm) - minimum_tail)
+        # A 300 ms pause is less likely to be inside a word than a brief dip.
+        # Search the final 30 seconds and prefer the latest real pause, keeping
+        # chunks large. With continuous speech, use the quietest window instead.
+        start = size - min(30 * PCM_BYTES_PER_SECOND, size // 2)
+        window = 3 * PCM_BYTES_PER_SECOND // 10
+        step = PCM_BYTES_PER_SECOND // 10
         def energy(offset):
             samples = array.array("h", pcm[offset:offset + window])
             if sys.byteorder != "little":
                 samples.byteswap()
-            return sum(abs(sample) for sample in samples)
-        quiet = min(range(start, size - window + 1, window), key=energy)
+            return sum(abs(sample) for sample in samples) / len(samples)
+        candidates = [(energy(offset), offset)
+                      for offset in range(start, size - window + 1, step)]
+        pauses = [offset for level, offset in candidates if level <= 327]
+        quiet = pauses[-1] if pauses else min(candidates, key=lambda item: (item[0], -item[1]))[1]
         boundary = quiet + window // 2
         yield pcm[:boundary]
         pcm = pcm[boundary:]
@@ -136,23 +149,29 @@ def normalize_audio(audio):
     with tempfile.TemporaryDirectory(prefix="sanctuary-stt-") as tmp:
         source = Path(tmp) / "input"
         pcm = Path(tmp) / "audio.pcm"
-        flac = Path(tmp) / "audio.flac"
         source.write_bytes(audio)
         common = ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error"]
         subprocess.run(common + ["-protocol_whitelist", "file,pipe", "-i", str(source),
                        "-t", str(MAX_SECONDS + 1), "-vn", "-ac", "1", "-ar", "16000",
                        "-f", "s16le", str(pcm)], check=True, capture_output=True, timeout=90)
-        if pcm.stat().st_size > MAX_SECONDS * 16000 * 2:
+        if pcm.stat().st_size > MAX_SECONDS * PCM_BYTES_PER_SECOND:
             raise ValueError(f"Recordings must be at most {MAX_SECONDS // 60} minutes. Split longer audio.")
         if not pcm.stat().st_size:
             raise ValueError("The recording contains no audio.")
-        chunks = []
-        for chunk in pcm_chunks(pcm.read_bytes()):
-            subprocess.run(common + ["-y", "-f", "s16le", "-ar", "16000", "-ac", "1",
-                           "-i", "pipe:0", str(flac)], input=chunk,
-                           check=True, capture_output=True, timeout=60)
-            chunks.append(flac.read_bytes())
-        return chunks
+        return pcm.read_bytes()
+
+
+def encode_audio(pcm):
+    # A seekable output lets ffmpeg finalize FLAC's sample count and duration.
+    # Piped FLAC leaves those fields empty and MAI returns provider HTTP 500.
+    with tempfile.TemporaryDirectory(prefix="sanctuary-stt-flac-") as tmp:
+        output = Path(tmp) / "audio.flac"
+        subprocess.run(
+            ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error",
+             "-f", "s16le", "-ar", "16000", "-ac", "1", "-i", "pipe:0", str(output)],
+            input=pcm, check=True, capture_output=True, timeout=60,
+        )
+        return output.read_bytes()
 
 
 def request_json(url, payload, key):
@@ -179,13 +198,66 @@ def transcribe(audio, language, phrases, key):
             result = request_json(UPSTREAM, payload, key)
             break
         except urllib.error.HTTPError as exc:
-            if attempt == 2 or exc.code not in {429, 502, 503, 504}:
+            if attempt == 2 or exc.code not in {429, 502, 503}:
                 raise
             logging.warning("OpenRouter HTTP %s; retrying transcription", exc.code)
             time.sleep(2 ** (attempt + 1))
     if not isinstance(result.get("text"), str):
         raise ValueError("Transcription provider did not return text.")
     return {"text": result["text"]}
+
+
+def transcribe_recording(pcm, language, phrases, key):
+    """Start as large as possible; reduce only for payload limits or timeouts."""
+    chunk_seconds = MAX_SECONDS
+
+    def process(chunk):
+        nonlocal chunk_seconds
+        seconds = len(chunk) / PCM_BYTES_PER_SECOND
+        if seconds > chunk_seconds:
+            return [text for smaller in pcm_chunks(chunk, chunk_seconds)
+                    for text in process(smaller)]
+        audio = encode_audio(chunk)
+        if len(audio) > MAX_UPSTREAM_AUDIO:
+            if seconds <= MIN_CHUNK_SECONDS:
+                raise ValueError("Audio chunk exceeds the transcription provider's size limit.")
+            # Estimate the largest fitting duration with a little room for
+            # changes in compression; every resulting chunk is checked again.
+            limit = seconds * MAX_UPSTREAM_AUDIO / len(audio) * 0.95
+        else:
+            try:
+                text = transcribe(audio, language, phrases, key)["text"]
+                logging.info("Transcribed %.1f seconds of audio", seconds)
+                return [text]
+            except urllib.error.HTTPError as exc:
+                too_large = exc.code == 413 or (
+                    exc.code == 400
+                    and b"does not support large audio" in exc.read(8192).lower()
+                )
+                # OpenRouter also wraps provider failures in 502/503. After
+                # the transient retries are exhausted, reduce the chunk rather
+                # than failing the entire long recording on the same payload.
+                if seconds <= MIN_CHUNK_SECONDS or not (too_large or exc.code in {408, 502, 503, 504}):
+                    raise
+                reason = f"OpenRouter HTTP {exc.code}"
+            except urllib.error.URLError as exc:
+                if seconds <= MIN_CHUNK_SECONDS or not isinstance(exc.reason, TimeoutError):
+                    raise
+                reason = "connection timeout"
+            except TimeoutError:
+                if seconds <= MIN_CHUNK_SECONDS:
+                    raise
+                reason = "connection timeout"
+            limit = seconds / 2
+            logging.info("Reducing %.1f-second audio chunk after %s", seconds, reason)
+        chunk_seconds = min(chunk_seconds, max(MIN_CHUNK_SECONDS, limit))
+        del audio
+        texts = []
+        for smaller in pcm_chunks(chunk, chunk_seconds):
+            texts.extend(process(smaller))
+        return texts
+
+    return {"text": "\n\n".join(text for text in process(pcm) if text.strip())}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -217,7 +289,7 @@ class Handler(BaseHTTPRequestHandler):
                     break
                 total += size
                 if total > MAX_UPLOAD:
-                    raise OverflowError("Upload exceeds 25 MiB.")
+                    raise OverflowError("Upload exceeds 64 MiB plus multipart framing.")
                 chunk = self.rfile.read(size)
                 if len(chunk) != size or self.rfile.read(2) != b"\r\n":
                     raise ValueError("Incomplete upload.")
@@ -225,7 +297,7 @@ class Handler(BaseHTTPRequestHandler):
             return b"".join(chunks)
         size = int(self.headers.get("Content-Length", "0"))
         if not 0 < size <= MAX_UPLOAD:
-            raise OverflowError("Upload must be between 1 byte and 25 MiB.")
+            raise OverflowError("Upload must be between 1 byte and 64 MiB plus multipart framing.")
         body = self.rfile.read(size)
         if len(body) != size:
             raise ValueError("Incomplete upload.")
@@ -249,12 +321,11 @@ class Handler(BaseHTTPRequestHandler):
         try:
             body = self.read_upload()
             audio, language = parse_upload(self.headers.get("Content-Type", ""), body)
+            del body
             phrases = vocabulary(self.server.vault, self.server.terms_file)
-            chunks = normalize_audio(audio)
-            logging.info("Transcribing recording in %d chunk(s)", len(chunks))
-            texts = [transcribe(chunk, language, phrases, self.server.api_key)["text"]
-                     for chunk in chunks]
-            self.respond(200, {"text": "\n\n".join(text for text in texts if text.strip())})
+            pcm = normalize_audio(audio)
+            del audio
+            self.respond(200, transcribe_recording(pcm, language, phrases, self.server.api_key))
         except urllib.error.HTTPError as exc:
             logging.warning("OpenRouter returned HTTP %s", exc.code)
             self.respond(502, {"error": f"OpenRouter returned HTTP {exc.code}"})
