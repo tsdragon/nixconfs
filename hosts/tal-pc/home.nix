@@ -42,6 +42,38 @@
     #vnyan.enable = true;
   };
 
+  programs.opencode = {
+    enable = true;
+    settings = {
+      # Updates are managed by the pinned Nix package, not OpenCode itself.
+      autoupdate = false;
+      share = "manual";
+      permission = {
+        bash = "ask";
+        external_directory = "ask";
+        doom_loop = "ask";
+        read = {
+          "*" = "allow";
+          "*.env" = "deny";
+          "*.env.*" = "deny";
+          "*.env.example" = "allow";
+          "*.key" = "deny";
+          "*.pem" = "deny";
+          "*/.ssh/*" = "deny";
+          "*/opencode/auth.json" = "deny";
+          "*/.webui_secret_key" = "deny";
+          "*/secrets/location.nix" = "ask";
+        };
+      };
+      mcp = {
+        context7 = {
+          type = "remote";
+          url = "https://mcp.context7.com/mcp";
+        };
+      };
+    };
+  };
+
   home.packages = with pkgs; [
     gimp-with-plugins
     onlyoffice-desktopeditors
