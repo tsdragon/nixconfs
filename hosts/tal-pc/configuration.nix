@@ -28,7 +28,7 @@
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 3; # keep a small rollback window without filling the EFI partition
+        configurationLimit = 2; # one rollback fits alongside the current system on the 512 MiB ESP
         consoleMode = "max"; # keep the pre-kernel framebuffer as close to native as possible
       };
       efi.canTouchEfiVariables = true;
