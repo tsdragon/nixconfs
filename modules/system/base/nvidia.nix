@@ -38,18 +38,18 @@
         passthru =
           old.passthru
           // {
-            mod = driver.mod.overrideAttrs (oldMod:
+            open = driver.open.overrideAttrs (oldOpen:
               lib.optionalAttrs (driver.version == "595.71.05" && lib.versionAtLeast config.boot.kernelPackages.kernel.version "7.2") {
                 patches =
-                  (oldMod.patches or [])
+                  (oldOpen.patches or [])
                   ++ [
                     (pkgs.fetchurl {
                       url = "https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/94bcd86886298f7798837a38dc1ff361d60a9c8d/nvidia/nvidia-utils/0001-make-Add-support-for-7.2-Kernel.patch";
                       hash = "sha256-hdklzeaY0s/0RME+CtQoddwOuTkSh+/jNdDD6t7cC48=";
                     })
                   ];
-                # The patch targets kernel-open/; this source starts below it.
-                patchFlags = ["-p2"];
+                # The open-module source includes the kernel-open/ directory.
+                patchFlags = ["-p1"];
               });
           };
       });
