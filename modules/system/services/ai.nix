@@ -111,6 +111,20 @@ in {
           dropParams = ["stop"];
           modelDisplayLabel = "OpenRouter";
         }
+        {
+          name = "OpenRouter Qwen Approved";
+          apiKey = "\${OPENROUTER_KEY}";
+          baseURL = "https://openrouter.ai/api/v1";
+          models = {
+            default = ["qwen/qwen3.8-27b"];
+            fetch = false;
+          };
+          titleConvo = true;
+          titleModel = "qwen/qwen3.8-27b";
+          dropParams = ["stop"];
+          addParams.provider.only = ["alibaba" "novita"];
+          modelDisplayLabel = "Qwen3.8 27B / Alibaba + Novita";
+        }
       ];
 
       mcpServers = {
