@@ -32,6 +32,11 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    opencode = {
+      url = "github:dan-online/opencode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -44,6 +49,7 @@
     firefox-addons,
     zen-browser,
     sops-nix,
+    opencode,
     ...
   } @ inputs: let
     inherit (self) outputs;

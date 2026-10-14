@@ -25,6 +25,7 @@
     ../../modules/home-manager/apps/postybirb.nix
     #../../modules/home-manager/apps/roon.nix
     ../../modules/home-manager/apps/git.nix
+    ../../modules/home-manager/apps/opencode.nix
     ../../modules/home-manager/bundles/streaming.nix
     #../../modules/home-manager/apps/vnyan.nix
   ];
@@ -40,38 +41,6 @@
     home-manager.enable = true;
     #roon-client.enable = true;
     #vnyan.enable = true;
-  };
-
-  programs.opencode = {
-    enable = true;
-    settings = {
-      # Updates are managed by the pinned Nix package, not OpenCode itself.
-      autoupdate = false;
-      share = "manual";
-      permission = {
-        bash = "ask";
-        external_directory = "ask";
-        doom_loop = "ask";
-        read = {
-          "*" = "allow";
-          "*.env" = "deny";
-          "*.env.*" = "deny";
-          "*.env.example" = "allow";
-          "*.key" = "deny";
-          "*.pem" = "deny";
-          "*/.ssh/*" = "deny";
-          "*/opencode/auth.json" = "deny";
-          "*/.webui_secret_key" = "deny";
-          "*/secrets/location.nix" = "ask";
-        };
-      };
-      mcp = {
-        context7 = {
-          type = "remote";
-          url = "https://mcp.context7.com/mcp";
-        };
-      };
-    };
   };
 
   home.packages = with pkgs; [
