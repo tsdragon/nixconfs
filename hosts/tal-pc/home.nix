@@ -26,6 +26,7 @@
     #../../modules/home-manager/apps/roon.nix
     ../../modules/home-manager/apps/git.nix
     ../../modules/home-manager/apps/opencode.nix
+    ../../modules/home-manager/apps/hermes-desktop.nix
     ../../modules/home-manager/bundles/streaming.nix
     #../../modules/home-manager/apps/vnyan.nix
   ];

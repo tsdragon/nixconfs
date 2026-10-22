@@ -8,6 +8,7 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
