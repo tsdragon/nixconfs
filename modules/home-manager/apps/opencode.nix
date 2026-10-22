@@ -12,6 +12,7 @@
       # Updates are managed by the pinned Nix package, not OpenCode itself.
       autoupdate = false;
       share = "manual";
+      provider.openrouter.models."openai/gpt-6.1-sol".id = "openai/gpt-6.1-sol:floor";
       provider.openrouter.models."qwen/qwen3.8-27b".options.provider.only = ["alibaba" "novita"];
       agent.qwen-coder = {
         description = "Implements delegated coding changes and executes explicitly scoped shell tasks using Qwen. Use for well-defined implementation, testing, and command execution tasks.";
