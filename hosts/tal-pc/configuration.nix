@@ -12,7 +12,6 @@
     ../../modules/system/bundles/qmk.nix
     ../../modules/system/base/sops.nix
     ../../modules/system/services/odrive.nix
-    ../../modules/system/services/ai.nix
   ];
 
   networking.hostName = "tal-pc";
