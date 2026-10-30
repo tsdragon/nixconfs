@@ -7,6 +7,34 @@
   # Instantiate firefox-addons through its overlay against the current pkgs.
   # This keeps addon builds aligned with this config (including allowUnfree).
   firefoxAddons = (inputs.firefox-addons.overlays.default pkgs pkgs)."firefox-addons";
+  # Cookie domains include their subdomains, independently of scheme or port.
+  persistentSites = [
+    "youtube.com"
+    "google.com"
+    "linkedin.com"
+    "proton.me"
+    "protonmail.com"
+    "e621.net"
+    "twitch.tv"
+    "bullbits.com"
+    "home.arpa"
+    "x.com"
+    "twitter.com"
+    "bsky.app"
+    "bsky.social"
+    "furaffinity.net"
+    "onshape.com"
+    "cloudflare.com"
+    "tidal.com"
+    "chatgpt.com"
+    "openai.com"
+    "auth0.openai.com"
+  ];
+  cleanupConfig = pkgs.writeText "firefox-cookie-cleanup.json" (builtins.toJSON {
+    profile = "${config.home.homeDirectory}/.mozilla/firefox/myprofile";
+    cache = "${config.xdg.cacheHome}/mozilla/firefox/myprofile";
+    domains = persistentSites;
+  });
   bitwardenWidget = "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action";
   toolbarState = builtins.toJSON {
     placements = {
@@ -54,16 +82,22 @@ in {
   programs.firefox = {
     enable = true;
     configPath = ".mozilla/firefox";
-    # Clear temporary caches on exit while keeping history and login state.
-    policies.SanitizeOnShutdown = {
+    package = pkgs.firefox.overrideAttrs (old: {
+      buildCommand =
+        old.buildCommand
+        + ''
+          mv "$out/bin/firefox" "$out/bin/.firefox-before-cleanup"
+          makeWrapper ${pkgs.python3}/bin/python3 "$out/bin/firefox" \
+            --add-flags "${./firefox-cleanup.py} ${cleanupConfig} $out/bin/.firefox-before-cleanup"
+        '';
+    });
+    # Cookies are filtered offline by the launcher, separately from site storage.
+    policies.ClearOnShutdown = {
+      BrowsingHistoryAndDownloads = false;
+      CookiesAndStorage = false;
       Cache = true;
-      Cookies = false;
-      History = false;
-      FormData = false;
-      Sessions = false;
-      SiteSettings = false;
-      OfflineApps = false;
-      Locked = false;
+      FormData = true;
+      SiteSettings = true;
     };
 
     profiles = {
@@ -112,6 +146,11 @@ in {
         search.force = true;
 
         settings = {
+          # Keep page caches in memory only, including across abnormal exits.
+          "browser.cache.disk.enable" = false;
+          "browser.startup.page" = 1;
+          "browser.sessionstore.resume_from_crash" = false;
+          "browser.sessionstore.privacy_level" = 2;
           "extensions.autoDisableScopes" = 0;
           "extensions.enabledScopes" = 15;
           "browser.disableResetPrompt" = true;
