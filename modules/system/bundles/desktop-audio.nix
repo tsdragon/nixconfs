@@ -33,13 +33,10 @@
     "context.properties" = {
       "default.clock.rate" = 48000;
       "default.clock.allowed-rates" = [32000 44100 48000 88200 96000];
-      "default.clock.quantum" = 128;
+      # Leave headroom for USB audio and EasyEffects under desktop load.
+      "default.clock.quantum" = 512;
       "default.clock.min-quantum" = 64;
-      "default.clock.max-quantum" = 256;
-    };
-
-    stream.properties = {
-      resample.quality = 10;
+      "default.clock.max-quantum" = 2048;
     };
   };
 }
