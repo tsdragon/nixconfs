@@ -60,7 +60,10 @@
       enable = true;
       settings = {
         PermitRootLogin = "no";
+        AuthenticationMethods = "publickey";
+        PubkeyAuthentication = true;
         PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
       };
     };
     gvfs = {
