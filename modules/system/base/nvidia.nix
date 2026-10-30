@@ -12,12 +12,11 @@
     # Modesetting is required.
     modesetting.enable = true;
 
-    # WORKAROUND(2026-06-10): Preserve all VRAM to avoid corruption or crashes
-    # after resume. Re-test without this after major NVIDIA driver updates.
+    # Preserve VRAM across suspend. NixOS uses kernel suspend notifiers by
+    # default with the open module on NVIDIA 595 and newer.
     powerManagement.enable = true;
 
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    # Runtime D3 is for PRIME offload, not this desktop's display-driving GPU.
     powerManagement.finegrained = false;
 
     # Support for open driver is limited to the Turing and later architectures. Full list of
