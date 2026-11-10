@@ -33,9 +33,9 @@
     "context.properties" = {
       "default.clock.rate" = 48000;
       "default.clock.allowed-rates" = [32000 44100 48000 88200 96000];
-      # Leave headroom for USB audio and EasyEffects under desktop load.
-      "default.clock.quantum" = 512;
-      "default.clock.min-quantum" = 64;
+      # A shared floor prevents voice/game clients shrinking EasyEffects' buffer.
+      "default.clock.quantum" = 1024;
+      "default.clock.min-quantum" = 1024;
       "default.clock.max-quantum" = 2048;
     };
   };
