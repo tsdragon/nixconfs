@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgsUnstable,
   lib,
   ...
 }: let
@@ -52,7 +53,7 @@
   };
 in {
   home.packages = [
-    pkgs.vscode
+    pkgsUnstable.vscode
     vscodeDisableUpdateChecks
   ];
 
