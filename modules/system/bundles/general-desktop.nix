@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgsUnstable,
   lib,
   ...
 }: {
@@ -30,7 +31,7 @@
 
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${pkgs.vscode}/bin/code tunnel --name tal-nixos --accept-server-license-terms";
+      ExecStart = "${pkgsUnstable.vscode}/bin/code tunnel --name tal-nixos --accept-server-license-terms";
       Restart = "always";
       RestartSec = 10;
 
@@ -41,7 +42,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    vscode
+    pkgsUnstable.vscode
     bashInteractive
     coreutils
     wget
