@@ -21,16 +21,30 @@ This repository contains the flake-based NixOS and Home Manager configuration fo
 Build and switch the system:
 
 ```bash
-sudo nixos-rebuild switch --flake .#tal-pc
+nh os switch --ask --hostname tal-pc .
 ```
 
 Switch the Home Manager profile:
 
 ```bash
-home-manager switch --flake .#tal@tal-pc
+nh home switch --ask --configuration 'tal@tal-pc' .
 ```
 
 Update inputs and rebuild:
+
+```bash
+nix flake update
+nh os switch --ask --hostname tal-pc .
+nh home switch --ask --configuration 'tal@tal-pc' .
+```
+
+NH shows build progress and generation differences, then asks before activation.
+Run it as the normal user; it requests elevation for system activation itself.
+The Zsh aliases `nrs` and `hms` use these commands from any directory, and
+`full_upgrade` updates the inputs before running both. Existing Nix garbage
+collection is unchanged; NH's automatic cleanup is not enabled.
+
+Before NH is installed, or if you don't wish to use NH, use:
 
 ```bash
 nix flake update
