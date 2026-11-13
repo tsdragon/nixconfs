@@ -16,7 +16,7 @@
   xdg = {
     enable = true;
     mime.enable = true;
-    systemDirs.data = ["${config.home.homeDirectory}/.nix-profile/share/applications"];
+    systemDirs.data = ["${config.home.profileDirectory}/share"];
 
     # Browsers and desktop tools may replace this generated file with a
     # regular file, so let Home Manager reclaim it on the next activation.
