@@ -123,7 +123,6 @@
         [[ -n "''${key[Down]}" ]] && bindkey -- "''${key[Down]}" down-line-or-beginning-search
 
         fastfetch
-        eval "$(starship init zsh)"
         eval "$(zoxide init zsh)"
       '';
     };
