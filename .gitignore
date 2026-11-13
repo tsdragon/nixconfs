@@ -27,3 +27,12 @@ shell.nix
 
 # Ignore codex garbage
 .codex
+
+# Ignore local docs
+/docs
+
+# Ignore local scripts
+/scripts
+
+# Ignore ai stuff
+AGENTS.md
