@@ -23,19 +23,7 @@
   #};
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
-
-    # WORKAROUND(2026-10-28): USB-audio stop/restart can double-add a ready URB.
-    # Remove when the selected Zen kernel includes upstream dbd9d1cbf970.
-    kernelPatches = [
-      {
-        name = "usb-audio-ready-list-double-add";
-        patch = pkgs.fetchurl {
-          url = "https://github.com/torvalds/linux/commit/dbd9d1cbf9700528c8595ab1fa7ef832e79821fe.patch";
-          hash = "sha256-S7rr6LFrQbTK1t1pxPu4kARCprchqGeIf26yw9yQ/68=";
-        };
-      }
-    ];
+    kernelPackages = pkgs.linuxPackages_latest;
 
     loader = {
       systemd-boot = {
