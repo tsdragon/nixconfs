@@ -44,8 +44,8 @@
       };
 
       shellAliases = {
-        nrs = "sudo nixos-rebuild switch --flake ~/.config/nixconfs#$(hostname)";
-        hms = "home-manager switch --flake ~/.config/nixconfs#$(whoami)@$(hostname)";
+        nrs = "nh os switch --ask --hostname \"$(hostname)\" ~/.config/nixconfs";
+        hms = "nh home switch --ask --configuration \"$(whoami)@$(hostname)\" ~/.config/nixconfs";
         full_upgrade = "nix flake update --flake ~/.config/nixconfs && nrs && hms";
         cat = "bat --paging=never";
         cd = "z";

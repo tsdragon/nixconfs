@@ -63,6 +63,10 @@
 
   programs = {
     winbox.enable = true;
+    nh = {
+      enable = true;
+      flake = "/home/tal/.config/nixconfs";
+    };
   };
 
   services = {
