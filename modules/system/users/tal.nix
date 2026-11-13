@@ -32,6 +32,7 @@ in {
   users.users = {
     tal = {
       isNormalUser = true;
+      uid = 1000;
       home = "/home/tal";
       name = "tal";
       description = "Tal";
